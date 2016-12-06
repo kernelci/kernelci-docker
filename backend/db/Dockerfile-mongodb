@@ -1,0 +1,4 @@
+FROM mongo:3.2
+MAINTAINER "Milo Casagrande <milo.casagrande@linaro.org>"
+
+COPY mongo.conf /etc/mongod.conf
