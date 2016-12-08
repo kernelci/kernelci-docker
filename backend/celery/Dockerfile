@@ -10,7 +10,8 @@ RUN apt-get clean && apt-get update -qq && apt-get install -qq -y \
     python-redis \
     python-tz \
     python-jinja2 \
-    build-essential
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /etc/linaro
 COPY celery-config.cfg /etc/linaro/kernelci-celery.cfg
@@ -21,8 +22,6 @@ WORKDIR /home/user
 RUN git clone https://github.com/kernelci/kernelci-backend.git
 
 RUN pip install -r kernelci-backend/requirements.txt
-
-RUN apt-get purge -y python-dev build-essential && apt-get autoremove -y && rm -rf /var/lib/apt/lists/*
 
 USER user
 WORKDIR /home/user/kernelci-backend/app
