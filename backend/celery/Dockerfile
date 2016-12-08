@@ -7,9 +7,13 @@ RUN apt-get clean && apt-get update -qq && apt-get install -qq -y \
     python \
     python-pip \
     python-dev \
+    python-redis \
+    python-tz \
+    python-jinja2 \
     build-essential
 
 RUN mkdir -p /etc/linaro
+COPY celery-config.cfg /etc/linaro/kernelci-celery.cfg
 
 RUN groupadd user && useradd --create-home --home-dir /home/user -g user user
 
