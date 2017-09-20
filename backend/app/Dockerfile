@@ -1,16 +1,6 @@
-FROM debian:jessie
-MAINTAINER "Milo Casagrande <milo.casagrande@linaro.org>"
+FROM bitnami/minideb:jessie
 
-RUN apt-get update -qq && apt-get install -qq -y \
-    git \
-    python \
-    python-pip \
-    python-dev \
-    python-redis \
-    python-tz \
-    python-jinja2 \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
+RUN install_packages git python python-pip python-dev build-essential
 
 RUN mkdir -p /etc/linaro
 COPY kernelci-backend.cfg /etc/linaro/kernelci-backend.cfg
