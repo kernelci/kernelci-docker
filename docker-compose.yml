@@ -1,0 +1,38 @@
+version: '3.3'
+services:
+  proxy:
+    build: ./webserver
+    image: kernelci/proxy
+    depends_on:
+      - frontend
+      - backend
+    ports:
+      - 8080:8080
+      - 8081:8081
+    restart: always
+  frontend:
+    build: ./frontend
+    image: kernelci/frontend
+    depends_on:
+      - redis
+    volumes:
+      - ./frontend/flask_settings:/etc/linaro/kernelci-frontend.cfg
+    restart: always
+  backend:
+    build: ./backend/app
+    image: kernelci/backend
+    depends_on:
+      - mongo
+      - redis
+      - celery
+    restart: always
+  celery:
+    build: ./backend/celery
+    image: kernelci/celery
+    restart: always
+  redis:
+    image: redis:3.2
+    restart: always
+  mongo:
+    image: mongo:3.4
+    restart: always
