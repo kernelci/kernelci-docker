@@ -1,7 +1,12 @@
-FROM nginx:1.13
+FROM mhart/alpine-node:6.11.3 as build
 
-# Install deps
-RUN apt-get update && apt-get install -y rsync nodejs git-core
+RUN apk update && apk add git rsync
+
+RUN git clone https://github.com/kernelci/kernelci-frontend.git front
+
+RUN node /front/app/dashboard/static/js/lib/r.js -o /front/app/dashboard/static/js/build.js
+
+FROM nginx:1.13-alpine
 
 # Remove default configuration
 RUN rm /etc/nginx/conf.d/default.conf
@@ -20,6 +25,5 @@ COPY backend/maintenance.conf /etc/nginx/custom/backend-maintenance.conf
 # Copy frontend's static assets
 RUN mkdir -p /usr/share/nginx/html/kernelci/frontend \
     && chown nginx:nginx /usr/share/nginx/html/kernelci/frontend
-RUN git clone https://github.com/kernelci/kernelci-frontend.git front
-RUN nodejs /front/app/dashboard/static/js/lib/r.js -o /front/app/dashboard/static/js/build.js \
-    && rsync -a -u /tmp/assets-build/ /usr/share/nginx/html/kernelci/frontend/static
+
+COPY --from=build /tmp/assets-build/ /usr/share/nginx/html/kernelci/frontend/static
