@@ -1,8 +1,7 @@
 FROM debian:jessie
 MAINTAINER "Milo Casagrande <milo.casagrande@linaro.org>"
 
-ENV DEBIAN_FRONTEND noninteractive
-RUN apt-get clean && apt-get update -qq && apt-get install -qq -y \
+RUN apt-get update -qq && apt-get install -qq -y \
     git \
     python \
     python-pip \
@@ -25,4 +24,4 @@ RUN pip install -r kernelci-backend/requirements.txt
 
 USER user
 WORKDIR /home/user/kernelci-backend/app
-CMD ["celery", "worker", "-Ofair", "--autoscale=3,1", "--app=taskqueue", "-E"]
+CMD ["celery", "worker", "-Ofair", "--autoscale=3,1", "--app=taskqueue", "--broker=redis://redis:6379/0", "-E"]

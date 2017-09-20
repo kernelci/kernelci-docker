@@ -1,8 +1,7 @@
 FROM debian:jessie
 MAINTAINER "Milo Casagrande <milo.casagrande@linaro.org>"
 
-ENV DEBIAN_FRONTEND noninteractive
-RUN apt-get clean && apt-get update -qq && apt-get install -qq -y \
+RUN apt-get update -qq && apt-get install -qq -y \
     git \
     python \
     python-pip \
