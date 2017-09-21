@@ -2,8 +2,7 @@ FROM bitnami/minideb:jessie
 
 ### Install dependencies
 
-RUN apt-get update && \
-    apt-get install -y build-essential python python-pip python2.7-dev uwsgi-plugin-python git-core
+RUN install_packages build-essential git python python-pip python-dev uwsgi-plugin-python
 
 ### Setup application
 
