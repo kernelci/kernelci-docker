@@ -97,4 +97,5 @@ Among the ongoing changes:
 - [ ] Configure reverse proxy (routing with subdomains, TLS termination, ...)
 - [ ] Add front and back networks to isolate the services
 - [ ] Add stack file to deploy the application on a Swarm
-- [ ] Usage of env variable or Docker secret to provide the backend token
+- [ ] Usage of env variable or Docker secret to provide the backend token
+
