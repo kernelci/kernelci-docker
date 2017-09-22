@@ -17,11 +17,16 @@ The search application is defined in the `docker-compose-es.yml` file. It basica
 
 In this first version logstash is configured to check the new files written to disk and parses them accordingly.
 
-Build files are expected at the following locations:
-- BASE_FOLDER/<tree>/<branch>/<kernel>/<arch>/<defconfig>/build.log
+Build files are expected at the following locations
 
-Boot files are expected at the following locations:
-- BASE_FOLDER/<tree>/<branch>/<kernel>/<arch>/<defconfig>/<lab>/boot-*.log
+```
+BASE_FOLDER/tree/branch/kernel/arch/defconfig/build.log
+```
+
+Boot files are expected at the following locations
+```
+BASE_FOLDER/tree/branch/kernel/arch/defconfig/lab/boot-*.log
+```
 
 Note: those locations might not be the correct one, some others might also be used, but we will limit to those ones in this POC.
 
