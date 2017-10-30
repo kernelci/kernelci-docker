@@ -14,6 +14,15 @@ It uses docker-compose to run the services involded
 - redis
 - mongo
 
+## Prerequisites
+
+On Ubuntu LTS, requires recent versions of python openssl and docker-compose.
+
+```
+pip install --upgrade pyopenssl
+pip install --upgrade docker-compose
+```
+
 ## Usage
 
 The startup of the application is done in several steps:
