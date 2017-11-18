@@ -61,7 +61,7 @@ Note: this admin token can then be used to perform any api calls. One of the fir
 
 ### Configuration of the frontend
 
-In this step, we use the token generated above and set it in the *BACKEND_TOKEN* in the *etc/flask_settings*. As this file is bind-mounted from the host, the value of the token will be taken into account by the frontend container.
+In this step, we use the token generated above and set it in the *BACKEND_TOKEN* in the *frontend/flask_settings*. As this file is bind-mounted from the host, the value of the token will be taken into account by the frontend container.
 
 ### Restart the frontend
 
