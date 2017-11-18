@@ -92,7 +92,7 @@ Among the ongoing changes:
 - [x] Automate the setup (create token from master key, provide token to frontend)
 - [ ] Add some tests
 - [ ] Check storage part
-- [ ] Add api documentation
+- [x] Add api documentation
 - [ ] Add elasticsearch and modify backend so log files are sent to ES
 - [ ] Configure reverse proxy (routing with subdomains, TLS termination, ...)
 - [ ] Add front and back networks to isolate the services
