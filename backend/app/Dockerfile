@@ -1,6 +1,7 @@
 FROM bitnami/minideb:jessie
 
 RUN install_packages git python python-pip python-dev build-essential
+RUN pip install python-dateutil
 
 RUN mkdir -p /etc/linaro
 COPY kernelci-backend.cfg /etc/linaro/kernelci-backend.cfg
