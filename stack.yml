@@ -1,0 +1,52 @@
+version: '3.3'
+services:
+  proxy:
+    image: lucj/kernelci-proxy
+    ports:
+      - 8080:8080
+      - 8081:8081
+    deploy:
+      restart_policy:
+        condition: on-failure
+  frontend:
+    image: lucj/kernelci-frontend
+    configs:
+      - source: frontend
+        target: /etc/linaro/kernelci-frontend.cfg
+    deploy:
+      restart_policy:
+        condition: on-failure
+  backend:
+    image: lucj/kernelci-backend
+    deploy:
+      restart_policy:
+        condition: on-failure
+  celery:
+    image: lucj/kernelci-celery
+    deploy:
+      restart_policy:
+        condition: on-failure
+  redis:
+    image: redis:3.2
+    deploy:
+      restart_policy:
+        condition: on-failure
+  mongo:
+    image: mongo:3.4
+    configs:
+      - source: database
+        target: /docker-entrypoint-initdb.d/seed.js
+    environment:
+      - MONGO_INITDB_DATABASE=kernel-ci
+    volumes:
+      - data:/data/db
+    deploy:
+      restart_policy:
+        condition: on-failure
+configs:
+  frontend:
+    external: true
+  database:
+    external: true
+volumes:
+  data:

@@ -2,7 +2,7 @@ version: '3.3'
 services:
   proxy:
     build: ./proxy
-    image: kernelci/proxy
+    image: lucj/kernelci-proxy
     depends_on:
       - frontend
       - backend
@@ -12,15 +12,20 @@ services:
     restart: always
   frontend:
     build: ./frontend
-    image: kernelci/frontend
+    image: lucj/kernelci-frontend
     depends_on:
       - redis
-    volumes:
-      - ./frontend/flask_settings:/etc/linaro/kernelci-frontend.cfg
+    environment:
+      - BACKEND_URL="http://proxy:8081/"
+      - BACKEND_TOKEN="API_TOKEN"
+      - SECRET_KEY="random_string"
+      - DATE_RANGE=14
+      - CACHE_TYPE="redis"
+      - CACHE_REDIS_HOST="redis"
     restart: always
   backend:
     build: ./backend/app
-    image: kernelci/backend
+    image: lucj/kernelci-backend
     depends_on:
       - mongo
       - redis
@@ -28,7 +33,7 @@ services:
     restart: always
   celery:
     build: ./backend/celery
-    image: kernelci/celery
+    image: lucj/kernelci-celery
     restart: always
   redis:
     image: redis:3.2

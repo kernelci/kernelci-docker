@@ -5,79 +5,92 @@ KernelCI Docker
 
 This repository eases the installation process of KernelCI through the usage of Docker containers.
 
-It uses docker-compose to run the services involded
+It uses Docker Compose file to decribe the services of the whole application:
 
-- reverse-proxy
-- frontend 
-- backend
-- celery task queue
-- redis
-- mongo
+* reverse-proxy
+* frontend 
+* backend
+* celery task queue
+* redis
+* mongo
 
 ## Usage
 
-The startup of the application is done in several steps:
-- start the application
-- generate an access token from the api
-- set this token in the frontend configuration file
-- restart the frontend
+1. Setup a Docker host, it can be the local machine, a VM or physical machine with the Docker platform installed
 
-You can do all the steps manually as described below, or you can run the start script which handles all of them:
+Docker Machine is a great tool to spin up such hosts locally (on Virtualbox), on a cloud provider (AWS, GCE, Azure, DigitalOcean, ...). In one command line we can easily create a Docker host, the exemples bellow illustrate the usage of Docker Machine to create a Docker host named *kernelci* using different infrastructures.
+
+* Exemple using Virtualbox
+
+```
+$ docker-machine create --driver virtualbox kernelci
+```
+
+* Exemple using DigitalOcean
+
+```
+$ docker-machine create --driver digitalocean --digitalocean-access-token TOKEN kernelci
+```
+
+> For DigitalOcean as for any cloud provider, some additional options such as authentication token must be provided when using Docker Machine.
+
+1. Activate swarm mode
+
+> Make sure your local Docker client is setup to communicate with the Docker daemon you want to deploy the application on. In case you used Docker Machine to setup the host, you will need to use the command ```eval $(docker-machine env kernelci)```, this will set some environment variables so the client can send Docker related commands to the host created above.
+
+The Docker daemon running the application needs to be in swarm mode, this can easily be configure with the following command:
+
+```
+$ docker swarm init
+```
+
+In case several IP addresses are found, an additional *--advertise-addr* option needs to be specified indicating the IP to use:
+
+```
+$ docker swarm init --advertise-addr IP
+```
+
+> A Docker daemon running in swarm mode is requested in order to use some of the latest feature and primitive such as *Config*, *Secret*, ...
+
+1. Clone the repository
+
+```
+$ git clone https://github.com/lucj/kernelci-docker
+$ cd kernelci-docker
+```
+
+1. Run the application
+
+The startup of the application is done in several steps:
+* generation of a UUID
+* creation of one config for the frontend and one for the database (mongo) using this UUID
+* deploy the application *stack*
+
+All those steps are handled by the *start.sh* script, so the only things you need to do is running
 
 ```
 ./start.sh
-```
-
-### Start the application
-
-Once you have cloned the repository, the first step is to build the images so they are present locally.
-
-```
-docker-compose build
-```
-
-The application can then be started with the following command:
-
-```
-docker-compose up -d 
-```
-
-This command starts all the services.
-
-Note: as some services depend upon some other ones, they might restart several times waiting for their dependencies to be ready.
-
-### Generate an access token
-
-Once the API is up and running, it's available on port 8081 (temporary port that will be changed soon once the reserve proxy is configured with subdomains).
-
-We can now use the API to create an admin token from the MASTER_KEY.
-
-```
-curl -X POST -H "Content-Type: application/json" -H "Authorization: MASTER_KEY" -d '{"email": "me@gmail.com", "admin": 1}' localhost:8081/token
-{"code":201,"result":[{"token":"fd229997-944d-41f3-884f-c4c8b1cd67af"}]}
-```
-
-Note: this admin token can then be used to perform any api calls. One of the first action should be to create some non admin tokens in order to perform non admin actions. To keep thing simple, we'll provide the admin token to the frontend (will be changed later on).
-
-### Configuration of the frontend
-
-In this step, we use the token generated above and set it in the *BACKEND_TOKEN* in the *frontend/flask_settings*. As this file is bind-mounted from the host, the value of the token will be taken into account by the frontend container.
-
-### Restart the frontend
-
-We then need to start the frontend with the following command:
-
-```
-docker-compose restart frontend
 ```
 
 The web ui is then available on port 8080.
 
 ![Home](./images/kernelci-home.png)
 
-As the installation has just be done, there are no other resources (jobs, ...) available yet.
+## Upgrade
 
-![Jobs](./images/kernelci-jobs.png)
+In the current version, the frontend and backend are built by cloing the code from the following repository:
+* [https://github.com/kernelci/kernelci-frontend](https://github.com/kernelci/kernelci-frontend)
+* [https://github.com/kernelci/kernelci-backend](https://github.com/kernelci/kernelci-backend)
+
+In order to upgrade the application with the latest version (this only works on the local machine), you need to issue the following command:
+
+```
+$ docker-compose build
+```
+
+This will create the last versions of the frontend and backend locally.
+
+> Those images would need to be pushed to a repository in order to be deployed on a remote machine
 
 ## Status
 
@@ -93,9 +106,9 @@ Among the ongoing changes:
 - [ ] Add some tests
 - [ ] Check storage part
 - [x] Add api documentation
-- [ ] Add elasticsearch and modify backend so log files are sent to ES
+- [x] Add elasticsearch and modify backend so log files are sent to ES
 - [ ] Configure reverse proxy (routing with subdomains, TLS termination, ...)
 - [ ] Add front and back networks to isolate the services
-- [ ] Add stack file to deploy the application on a Swarm
+- [x] Add stack file to deploy the application on a Swarm
 - [ ] Usage of env variable or Docker secret to provide the backend token
 

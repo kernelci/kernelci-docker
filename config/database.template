@@ -1,0 +1,6 @@
+// Create record for admin
+var admin = {"username" : "admin", "properties" : [ 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0 ], "token" : "API_TOKEN", "version" : "1.0", "email" : "me@gmail.com", "expired" : false, "expires_on" : null }
+print(admin)
+
+// Insert admin
+db["api-token"].insert(admin)
