@@ -13,22 +13,24 @@ IP=$(echo $DOCKER_HOST | cut -d'/' -f3 | cut -d':' -f1)
 
 # Generate admin token in the uuid (Universal Unique Identifier) format
 # ex: efad9089-c8a3-455d-881f-5f05a44a5349
-UUID=$(docker container run --rm lucj/uuid:1.0)
+UUID=$(docker container run --rm lucj/uuid:1.0 2>/dev/null)
 
 # Cleanup previous configs
 docker config rm frontend database 2>/dev/null
 
 # Create config for mongo initialisation
+echo "-> Creating database configuration"
 sed "s/API_TOKEN/$UUID/" config/database.template > config/database.config
-docker config create database config/database.config
+docker config create database config/database.config 1>/dev/null
 
 # Create config for frontend initialisation
+echo "-> Creating frontend configuration"
 sed "s/API_TOKEN/$UUID/" frontend/flask_settings > config/frontend.config
-docker config create frontend config/frontend.config
+docker config create frontend config/frontend.config 1>/dev/null
 
 # Start the whole application
-echo "-> Starting the application..."
-docker stack deploy -c stack.yml kernelci
+echo "-> Starting the application"
+docker stack deploy -c stack.yml kernelci 1>/dev/null
 
 # Wait for the app (frontend + backend) to be ready
 spin='-\|/'
@@ -48,7 +50,7 @@ done
 echo -e "\r-> backend is healthly"
 
 echo
-echo "-> application is deployed:"
+echo "-> application deployed:"
 echo "- frontend available on http://${IP}:8080"
 echo "- backend  available on http://${IP}:8081"
 echo
