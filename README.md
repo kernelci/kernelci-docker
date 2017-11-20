@@ -16,7 +16,9 @@ It uses Docker Compose file to decribe the services of the whole application:
 
 ## Usage
 
-1. Setup a Docker host, it can be the local machine, a VM or physical machine with the Docker platform installed
+### Setup a Docker host
+
+This can be the local machine, a VM or physical machine with the Docker platform installed.
 
 Docker Machine is a great tool to spin up such hosts locally (on Virtualbox), on a cloud provider (AWS, GCE, Azure, DigitalOcean, ...). In one command line we can easily create a Docker host, the exemples bellow illustrate the usage of Docker Machine to create a Docker host named *kernelci* using different infrastructures.
 
@@ -34,7 +36,7 @@ $ docker-machine create --driver digitalocean --digitalocean-access-token TOKEN 
 
 > For DigitalOcean as for any cloud provider, some additional options such as authentication token must be provided when using Docker Machine.
 
-1. Activate swarm mode
+### Activate swarm mode
 
 > Make sure your local Docker client is setup to communicate with the Docker daemon you want to deploy the application on. In case you used Docker Machine to setup the host, you will need to use the command ```eval $(docker-machine env kernelci)```, this will set some environment variables so the client can send Docker related commands to the host created above.
 
@@ -52,14 +54,14 @@ $ docker swarm init --advertise-addr IP
 
 > A Docker daemon running in swarm mode is requested in order to use some of the latest feature and primitive such as *Config*, *Secret*, ...
 
-1. Clone the repository
+### Clone the repository
 
 ```
 $ git clone https://github.com/lucj/kernelci-docker
 $ cd kernelci-docker
 ```
 
-1. Run the application
+### Run the application
 
 The startup of the application is done in several steps:
 * generation of a UUID
