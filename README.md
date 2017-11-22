@@ -78,9 +78,19 @@ The web ui is then available on port 8080.
 
 ![Home](./images/kernelci-home.png)
 
-## Upgrade
+### Stop the application
 
-In the current version, the frontend and backend are built by cloing the code from the following repository:
+In order to stop the application and remove all the components, run the following command:
+
+```
+./stop.sh
+```
+
+In the current version, the database is persisted on a volume defined on the Docker host.
+
+### Upgrade
+
+In the current version, the frontend and backend are built by cloning the code from the following repository:
 * [https://github.com/kernelci/kernelci-frontend](https://github.com/kernelci/kernelci-frontend)
 * [https://github.com/kernelci/kernelci-backend](https://github.com/kernelci/kernelci-backend)
 
@@ -113,4 +123,5 @@ Among the ongoing changes:
 - [ ] Add front and back networks to isolate the services
 - [x] Add stack file to deploy the application on a Swarm
 - [ ] Usage of env variable or Docker secret to provide the backend token
+- [ ] Handle tagging of the application and of its components
 
