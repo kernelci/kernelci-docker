@@ -9,7 +9,7 @@ sleep 15
 echo "-> stack removed"
 
 # Remove the network (if needed)
-docker newtwork rm kernelci_default 2>/dev/null
+docker network rm kernelci_default 2>/dev/null
 echo "-> network removed"
 
 # Remove configs

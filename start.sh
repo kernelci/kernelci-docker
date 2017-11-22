@@ -23,11 +23,13 @@ docker config rm frontend database 2>/dev/null
 
 # Create config for mongo initialisation
 echo "-> Creating database configuration"
+sleep 2
 sed "s/API_TOKEN/$UUID/" config/database.template > config/database.config
 docker config create database config/database.config 1>/dev/null
 
 # Create config for frontend initialisation
 echo "-> Creating frontend configuration"
+sleep 2
 sed "s/API_TOKEN/$UUID/" frontend/flask_settings > config/frontend.config
 docker config create frontend config/frontend.config 1>/dev/null
 
