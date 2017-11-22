@@ -8,8 +8,11 @@ if [ $? = 1 ]; then
     exit 1
 fi
 
-# Get IP of Docker host
+# Get IP of Docker host from the DOCKER_HOST environment variable
 IP=$(echo $DOCKER_HOST | cut -d'/' -f3 | cut -d':' -f1)
+if [ "$IP" = "" ]; then
+  IP="127.0.0.1"
+fi
 
 # Generate admin token in the uuid (Universal Unique Identifier) format
 # ex: efad9089-c8a3-455d-881f-5f05a44a5349
