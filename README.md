@@ -36,6 +36,8 @@ $ docker-machine create --driver digitalocean --digitalocean-access-token TOKEN 
 
 > For DigitalOcean as for any cloud provider, some additional options such as authentication token must be provided when using Docker Machine.
 
+* Docker Machine also allows to manage an existing server with the [Generic driver](https://docs.docker.com/machine/drivers/generic/)
+
 ### Activate swarm mode
 
 > Make sure your local Docker client is setup to communicate with the Docker daemon you want to deploy the application on. In case you used Docker Machine to setup the host, you will need to use the command ```eval $(docker-machine env kernelci)```, this will set some environment variables so the client can send Docker related commands to the host created above.
@@ -65,7 +67,8 @@ $ cd kernelci-docker
 
 The startup of the application is done in several steps:
 * generation of a UUID
-* creation of one config for the frontend and one for the database (mongo) using this UUID
+* setup of this UUID in the database
+* creation of a config for the frontend using this UUID
 * deploy the application *stack*
 
 All those steps are handled by the *start.sh* script, so the only things you need to do is running
@@ -74,7 +77,7 @@ All those steps are handled by the *start.sh* script, so the only things you nee
 ./start.sh
 ```
 
-The web ui is then available on port 8080.
+The web ui is then available on port 8080 and the api on port 8081.
 
 ![Home](./images/kernelci-home.png)
 

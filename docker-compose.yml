@@ -9,35 +9,50 @@ services:
     ports:
       - 8080:8080
       - 8081:8081
-    restart: always
+    deploy:
+      restart_policy:
+        condition: on-failure
   frontend:
     build: ./frontend
     image: lucj/kernelci-frontend
+    configs:
+      - source: frontend
+        target: /etc/linaro/kernelci-frontend.cfg
     depends_on:
+      - backend
       - redis
-    environment:
-      - BACKEND_URL="http://proxy:8081/"
-      - BACKEND_TOKEN="API_TOKEN"
-      - SECRET_KEY="random_string"
-      - DATE_RANGE=14
-      - CACHE_TYPE="redis"
-      - CACHE_REDIS_HOST="redis"
-    restart: always
+    deploy:
+      restart_policy:
+        condition: on-failure
   backend:
     build: ./backend/app
     image: lucj/kernelci-backend
     depends_on:
       - mongo
-      - redis
-      - celery
-    restart: always
+    deploy:
+      restart_policy:
+        condition: on-failure
   celery:
     build: ./backend/celery
     image: lucj/kernelci-celery
-    restart: always
+    deploy:
+      restart_policy:
+        condition: on-failure
   redis:
     image: redis:3.2
-    restart: always
+    deploy:
+      restart_policy:
+        condition: on-failure
   mongo:
     image: mongo:3.4
-    restart: always
+    volumes:
+      - data:/data/db
+    deploy:
+      restart_policy:
+        condition: on-failure
+configs:
+  frontend:
+    external: true
+volumes:
+  data:
+    external: true

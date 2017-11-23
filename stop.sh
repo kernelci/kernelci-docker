@@ -1,18 +1,17 @@
 #!/bin/bash
 
-# Start the whole application
 echo "-> Stopping the application..."
 
-# Remove the stack
+echo "-> removing stack"
 docker stack rm kernelci
+
+echo "-> wait for all the services to stop gracefully"
 sleep 15
-echo "-> stack removed"
 
-# Remove the network (if needed)
-docker network rm kernelci_default 2>/dev/null
-echo "-> network removed"
+echo "-> removing dedicated network"
+docker network rm kernelci_default
 
-# Remove configs
-docker config rm frontend database 2>/dev/null
-echo "-> configs removed"
+echo "-> removing frontend config"
+docker config rm frontend
 
+echo "-> Application have been stopped"
