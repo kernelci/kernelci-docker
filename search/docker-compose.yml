@@ -4,14 +4,18 @@ services:
     image: logstash:5.5.2
     depends_on:
       - elasticsearch
+    restart: always
     volumes:
-      - ./search/logstash/logstash.conf:/config/logstash.conf
-      - STORAGE_FOLDER:/tmp/:ro
+      - ./logstash.conf:/config/logstash.conf
+      - $PWD/log/:/tmp/:ro
     command: ["logstash", "-f", "/config/logstash.conf"]
   elasticsearch:
     image: elasticsearch:5.5.2
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ports:
       - 9200:9200
+    restart: always
     volumes:
       - es:/usr/share/elasticsearch/data
   kibana:
@@ -20,5 +24,6 @@ services:
       - elasticsearch
     ports:
       - 5601:5601
+    restart: always
 volumes:
   es:
