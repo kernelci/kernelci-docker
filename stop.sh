@@ -11,7 +11,4 @@ sleep 15
 echo "-> removing dedicated network"
 docker network rm kernelci_default
 
-echo "-> removing frontend config"
-docker config rm frontend
-
 echo "-> Application have been stopped"

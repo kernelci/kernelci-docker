@@ -15,9 +15,6 @@ services:
   frontend:
     build: ./frontend
     image: lucj/kernelci-frontend
-    configs:
-      - source: frontend
-        target: /etc/linaro/kernelci-frontend.cfg
     depends_on:
       - backend
       - redis
@@ -50,9 +47,5 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
-configs:
-  frontend:
-    external: true
 volumes:
   data:
-    external: true
