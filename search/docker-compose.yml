@@ -7,14 +7,12 @@ services:
     restart: always
     volumes:
       - ./logstash.conf:/config/logstash.conf
-      - $PWD/log/:/tmp/:ro
+      - $PWD/log/:/kernelci/log/:ro
     command: ["logstash", "-f", "/config/logstash.conf"]
   elasticsearch:
     image: elasticsearch:5.5.2
     environment:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    ports:
-      - 9200:9200
     restart: always
     volumes:
       - es:/usr/share/elasticsearch/data

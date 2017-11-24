@@ -1,1 +1,3 @@
 config/*.config
+search/test
+search/log/log-*.log
