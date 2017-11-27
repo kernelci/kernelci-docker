@@ -81,6 +81,14 @@ The web ui is then available on port 8080 and the api on port 8081.
 
 ![Home](./images/kernelci-home.png)
 
+### Seed an existing dump
+
+If you need to restore an existing mongo dump file (in .tar.gz format), run the following command:
+
+```
+./seed.sh PATH_TO_DUMP_TAR_GZ
+```
+
 ### Stop the application
 
 In order to stop the application and remove all the components, run the following command:
