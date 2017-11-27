@@ -24,19 +24,17 @@ except Exception:
   output = "/log/log-{}.log".format(datetime.datetime.now().strftime("%Y%m%dT%H%M%S"))
  
 # Get metadata
-metadata = job_data["metadata"]
-if len(metadata) != 0:
-  metadata = {i:j for x in job_data["metadata"] for i,j in x.items()}
-else:
-  metadata = yaml.load(job_data["definition"], Loader=yaml.Loader)["metadata"]
+metadata = yaml.load(job_data["definition"], Loader=yaml.Loader)["metadata"]
 
 # Filter metadata that should be used to label each log entry
 meta = {
-         "tree"      : metadata["kernel.tree"],
-         "branch"    : metadata["git.branch"],
-         "kernel"    : metadata["kernel.version"],
-         "arch"      : metadata["job.arch"],
-         "defconfig" : metadata["kernel.defconfig"]
+         "tree"          : metadata["kernel.tree"],
+         "branch"        : metadata["git.branch"],
+         "kernel"        : metadata["kernel.version"],
+         "arch"          : metadata["job.arch"],
+         "defconfig"     : metadata["kernel.defconfig"],
+         "platform_name" : metadata["platform.name"],
+         "platform_mach" : metadata["platform.mach"]
        }
 
 # Get logs
