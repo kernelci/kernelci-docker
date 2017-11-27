@@ -32,9 +32,9 @@ echo "-> application deployed"
 echo "-> configuring the application..."
 
 # Wait for the backend to be available
-TOKEN=$(curl -s -X POST -H "Content-Type: application/json" -H "Authorization: MASTER_KEY" -d '{"email": "adm@kernelci.org", "admin": 1}' $IP:8081/token | cut -d'"' -f6)
+TOKEN=$(curl -s -X POST -H "Content-Type: application/json" -H "Authorization: MASTER_KEY" -d '{"email": "adm@kernelci.org", "admin": 1}' $IP:8081/token | docker container run --rm -i lucj/jq -r .result[0].token)
 while [[ "$TOKEN" = "" ]];do
-  TOKEN=$(curl -s -X POST -H "Content-Type: application/json" -H "Authorization: MASTER_KEY" -d '{"email": "adm@kernelci.org", "admin": 1}' $IP:8081/token | cut -d'"' -f6)
+  TOKEN=$(curl -s -X POST -H "Content-Type: application/json" -H "Authorization: MASTER_KEY" -d '{"email": "adm@kernelci.org", "admin": 1}' $IP:8081/token | docker container run --rm -i lucj/jq -r .result[0].token)
   sleep 1
 done
 echo "-> token generated: $TOKEN"
