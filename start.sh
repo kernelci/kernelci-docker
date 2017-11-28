@@ -26,38 +26,41 @@ echo "-> deploying the application..."
 docker stack deploy -c docker-compose.yml $STACK_NAME
 echo "-> application deployed"
 
-## Configure the application
+## Wait for the application to be available
 
-# Requesting admin token from the API
-echo "-> configuring the application..."
-
-# Wait for the backend to be available
-TOKEN=$(curl -s -X POST -H "Content-Type: application/json" -H "Authorization: MASTER_KEY" -d '{"email": "adm@kernelci.org", "admin": 1}' $IP:8081/token | docker container run --rm -i lucj/jq -r .result[0].token)
-while [[ "$TOKEN" = "" ]];do
-  TOKEN=$(curl -s -X POST -H "Content-Type: application/json" -H "Authorization: MASTER_KEY" -d '{"email": "adm@kernelci.org", "admin": 1}' $IP:8081/token | docker container run --rm -i lucj/jq -r .result[0].token)
+echo "-> waiting for backend..."
+while [ $(curl -s -m 3 -o /dev/null -w "%{http_code}" $IP:8081) -ne 200 ]; do
+   sleep 1
+done
+echo "-> waiting for frontend..."
+while [ $(curl -s -m 3 -o /dev/null -w "%{http_code}" $IP:8080) -ne 200 ]; do
   sleep 1
 done
-echo "-> token generated: $TOKEN"
 
-# Create config
+## Configure the application
+
+echo "-> configuring the application..."
+
+### Get token from backend
+
+echo "-> requesting token from backend..."
+TOKEN=""
+while [ "$TOKEN" = "" ];do
+  TOKEN=$(curl -m 3 -s -X POST -H "Content-Type: application/json" -H "Authorization: MASTER_KEY" -d '{"email": "adm@kernelci.org", "admin": 1}' $IP:8081/token | docker container run --rm -i lucj/jq -r .result[0].token 2>/dev/null)
+  sleep 1
+done
+echo "-> token returned: $TOKEN"
+
+### Create configuration with token created
+
 CONFIG=frontend-$(date "+%Y%m%dT%H%M%S")
 sed "s/API_TOKEN/$TOKEN/" frontend/flask_settings > config/frontend.config
 docker config create $CONFIG config/frontend.config
 
-# Update frontend with configuration
+### Update frontend with configuration
+
 docker service update --config-add src=$CONFIG,target=/etc/linaro/kernelci-frontend.cfg kernelci_frontend
 
 echo "-> application configured"
-
-## Waiting for application to be available
-
-echo "-> waiting for the application to be available..."
-
-while [[ "$(curl -s -o /dev/null -I -w "%{http_code}" $IP:8081)" != "200" ]]; do
-  sleep 1
-done
 echo "--> backend available on http://${IP}:8081"
-while [[ "$(curl -s -o /dev/null -I -w "%{http_code}" $IP:8080)" != "200" ]]; do
-  sleep 1
-done
 echo "--> frontend available on http://${IP}:8080"
