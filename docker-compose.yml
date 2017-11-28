@@ -2,7 +2,7 @@ version: '3.3'
 services:
   proxy:
     build: ./proxy
-    image: lucj/kernelci-proxy
+    image: lucj/kernelci-proxy:${TAG:-latest}
     depends_on:
       - frontend
       - backend
@@ -14,7 +14,7 @@ services:
         condition: on-failure
   frontend:
     build: ./frontend
-    image: lucj/kernelci-frontend
+    image: lucj/kernelci-frontend:${TAG:-latest}
     depends_on:
       - backend
       - redis
@@ -23,7 +23,7 @@ services:
         condition: on-failure
   backend:
     build: ./backend/app
-    image: lucj/kernelci-backend
+    image: lucj/kernelci-backend:${TAG:-latest}
     depends_on:
       - mongo
     deploy:
@@ -31,7 +31,7 @@ services:
         condition: on-failure
   celery:
     build: ./backend/celery
-    image: lucj/kernelci-celery
+    image: lucj/kernelci-celery:${TAG:-latest}
     deploy:
       restart_policy:
         condition: on-failure
