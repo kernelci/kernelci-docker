@@ -43,3 +43,8 @@ RUN mkdir -p /usr/share/nginx/html/kernelci/backend/schema \
     && chown nginx:nginx /usr/share/nginx/html/kernelci/backend/
 COPY --from=backend /tmp/kernelci-backend/doc/build/html/ /usr/share/nginx/html/kernelci/backend
 COPY --from=backend /tmp/kernelci-backend/doc/schema/ /usr/share/nginx/html/kernelci/backend/schema/
+
+# Tools to perform health check
+RUN apk add --update curl py-pip && pip install uwsgi-tools
+COPY entrypoint.sh /usr/bin/entrypoint.sh
+CMD ["/usr/bin/entrypoint.sh"]
