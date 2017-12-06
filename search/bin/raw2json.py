@@ -23,11 +23,21 @@ try:
 except Exception:
   output = "/log/log-{}.log".format(datetime.datetime.now().strftime("%Y%m%dT%H%M%S"))
  
+# Build unique ID form "id" and "submit_time"
+# submit_time:
+# -> original format: "2017-11-20 14:02:54.528630+00:00"
+# -> parsed format: "20171120T140254"
+id = job_data["id"]
+submit_time = job_data["submit_time"][0:19].replace('-','').replace(':','').replace(' ','T')
+log_id = '{}-{}'.format(id, submit_time)
+
 # Get metadata
 metadata = yaml.load(job_data["definition"], Loader=yaml.Loader)["metadata"]
 
 # Filter metadata that should be used to label each log entry
+# and add id field
 meta = {
+         "id"            : log_id,
          "tree"          : metadata["kernel.tree"],
          "branch"        : metadata["git.branch"],
          "kernel"        : metadata["kernel.version"],
@@ -50,5 +60,4 @@ with open(output, "w") as fp:
     json.dump(log, fp)
     fp.write('\n')
 
-print("File {} generated".format(ntpath.basename(output)))
-print("Ready to be copied to the input folder of the Elastic stack")
+print("File {} generated and ready to be copied to the Elastic stack".format(ntpath.basename(output)))
