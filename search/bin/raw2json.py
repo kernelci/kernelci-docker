@@ -3,6 +3,7 @@ import yaml
 import sys
 import datetime
 import ntpath
+import re
 
 # Load JSON file
 input  = None
@@ -34,6 +35,16 @@ log_id = '{}-{}'.format(id, submit_time)
 # Get metadata
 metadata = yaml.load(job_data["definition"], Loader=yaml.Loader)["metadata"]
 
+# Get lab name
+lab_name = "unknown"
+if "notify" in job_data["definition"]:
+    notify = yaml.load(job_data["definition"], Loader=yaml.Loader)["notify"]
+    if "callback" in notify:
+        callback_url = notify["callback"]["url"]
+        m = re.search("lab_name=([\w-]+)", callback_url)
+        if m:
+            lab_name = m.group(1)
+
 # Filter metadata that should be used to label each log entry
 # and add id field
 meta = {
@@ -44,7 +55,8 @@ meta = {
          "arch"          : metadata["job.arch"],
          "defconfig"     : metadata["kernel.defconfig"],
          "platform_name" : metadata["platform.name"],
-         "platform_mach" : metadata["platform.mach"]
+         "platform_mach" : metadata["platform.mach"],
+         "lab_name"      : lab_name,
        }
 
 # Get logs
