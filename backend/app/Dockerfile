@@ -17,6 +17,10 @@ COPY kernelci-backend.cfg /etc/linaro/kernelci-backend.cfg
 ### Get source code
 WORKDIR /srv
 RUN git clone https://github.com/kernelci/kernelci-backend.git
+
+# QUICK FIX: changing configuration of celery so it targets redis instead of localhost
+COPY celeryconfig.py /srv/kernelci-backend/app/taskqueue/celeryconfig.py
+
 RUN pip install -r kernelci-backend/requirements.txt
 
 EXPOSE 8888
