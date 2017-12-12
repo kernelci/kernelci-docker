@@ -1,0 +1,3 @@
+[submodule "frontend/kernelci-frontend"]
+	path = frontend/kernelci-frontend
+	url = git@github.com:kernelci/kernelci-frontend.git

@@ -7,7 +7,7 @@ RUN install_packages build-essential git python python-pip python-dev uwsgi-plug
 ### Setup application
 
 WORKDIR /srv
-RUN git clone -b tests-view https://github.com/kernelci/kernelci-frontend.git
+COPY kernelci-frontend /srv/kernelci-frontend
 RUN pip install -r kernelci-frontend/requirements.txt
 WORKDIR /srv/kernelci-frontend/app
 RUN touch /etc/flask_settings
