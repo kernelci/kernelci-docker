@@ -1,4 +1,18 @@
-FROM kernelci-celery
-MAINTAINER "Milo Casagrande <milo.casagrande@linaro.org>"
+FROM bitnami/minideb:jessie
 
+RUN install_packages git python python-pip python-dev build-essential
+RUN pip install python-dateutil
+
+RUN mkdir -p /etc/linaro
+COPY celery-config.cfg /etc/linaro/kernelci-celery.cfg
+
+RUN groupadd user && useradd --create-home --home-dir /home/user -g user user
+
+WORKDIR /home/user
+RUN git clone https://github.com/kernelci/kernelci-backend.git
+
+RUN pip install -r kernelci-backend/requirements.txt
+
+USER user
+WORKDIR /home/user/kernelci-backend/app
 CMD ["celery", "beat", "--schedule=/var/run/celery/kernelci-beat.db", "--app=taskqueue", "--broker=redis://redis:6379/0", "--pid=/tmp/celery-beat.pid"]
