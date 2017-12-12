@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -x
 # Make sure dump file exist
 DUMP_FILE=$1
 if [ ! -e "$DUMP_FILE" ];then
@@ -15,7 +15,9 @@ if [ "$ID" = "" ];then
 fi
 
 ## Copy dump to container
-docker cp $DUMP_FILE $ID:/tmp
+DUMP_FOLDER=$(tar xvf $DUMP_FILE | head -n 1)
+docker cp $DUMP_FOLDER $ID:/tmp
+rm -r ./$DUMP_FOLDER
 
 ## Restore dump
-docker exec $ID /bin/bash -c "tar xf /tmp/dump.tar.gz && mongorestore dump/ --gzip"
+docker exec $ID /bin/bash -c "mongorestore /tmp/$DUMP_FOLDER --gzip"
