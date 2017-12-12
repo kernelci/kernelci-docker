@@ -31,10 +31,24 @@ services:
         condition: on-failure
   celery:
     build: ./backend/celery
-    image: lucj/kernelci-celery:${TAG:-latest}
+    # image: lucj/kernelci-celery:${TAG:-latest}
+    image: lucj/kernelci-celery:1.6
+    depends_on:
+      - redis
     deploy:
       restart_policy:
         condition: on-failure
+  # celerybeat:
+  #   build:
+  #     context: ./backend/celery
+  #     dockerfile: Dockerfile-celerybeat
+  #   image: lucj/kernelci-celerybeat:${TAG:-latest}
+  #   depends_on:
+  #     - redis
+  #   deploy:
+  #     restart_policy:
+  #       condition: on-failure
+  #   command: sleep 100000
   redis:
     image: redis:3.2
     deploy:
