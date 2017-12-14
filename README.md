@@ -41,6 +41,14 @@ $ curl -fsSL get.docker.com -o get-docker.sh
 $ sh get-docker.sh
 ```
 
+In order to install the latest stable version, the CHANNEL env variable needs to be set to "stable" beforehand.
+
+```
+export CHANNEL="stable"
+$ curl -fsSL get.docker.com -o get-docker.sh
+$ sh get-docker.sh
+```
+
 If you do not feel like running this script, you can download a Docker edition for your platform on the [Docker Store](https://store.docker.com/search?offering=community&type=edition)
 
 #### With Docker Machine
