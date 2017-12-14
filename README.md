@@ -20,21 +20,62 @@ It uses Docker Compose file to decribe the services of the whole application:
 
 This can be the local machine, a VM or physical machine with the Docker platform installed.
 
-Docker Machine is a great tool to spin up such hosts locally (on Virtualbox), on a cloud provider (AWS, GCE, Azure, DigitalOcean, ...). In one command line we can easily create a Docker host, the exemples bellow illustrate the usage of Docker Machine to create a Docker host named *kernelci* using different infrastructures.
+> Warning: currently, the application does not work on Debian 8, please use a Debian 9 or Ubuntu 16.04 box. Some tests and improvements needs to be done to support more platforms.
 
-* Exemple using Virtualbox
+Linux | Docker | Status
+----- | ------ | ------
+Ubuntu 16.04 | 17.11 | o
+Ubuntu 16.04 | 17.09 | o
+Debian 9 | 17.11 | o
+Debian 9 | 17.09 | o
+Debian 8 | 17.11 | x
+
+#### Manually
+
+If you setup a Docker host manually, make sure it runs at least Docker 17.09 (last stable version to date).
+
+An easy way to install Docker is through the following command (it installs the lastest version, not necessarily the stable one):
+
+```
+$ curl -fsSL get.docker.com -o get-docker.sh
+$ sh get-docker.sh
+```
+
+If you do not feel like running this script, you can download a Docker edition for your platform on the [Docker Store](https://store.docker.com/search?offering=community&type=edition)
+
+#### With Docker Machine
+
+Docker Machine is a great tool to spin up such hosts locally (on Virtualbox), on a cloud provider (AWS, GCE, Azure, DigitalOcean, ...). In one command line we can easily create a Docker host, the exemples bellow illustrate the usage of Docker Machine to create a Docker host named *kernelci* using different infrastructures. The installation instruction are available [here](https://docs.docker.com/machine/install-machine/)
+
+* Exemple using Virtualbox driver
 
 ```
 $ docker-machine create --driver virtualbox kernelci
 ```
 
-* Exemple using DigitalOcean
+Liste  des options disponibles pour ce driver: [https://docs.docker.com/machine/drivers/virtualbox/#/options](https://docs.docker.com/machine/drivers/virtualbox/#/options)
+
+* Exemple using DigitalOcean driver
 
 ```
 $ docker-machine create --driver digitalocean --digitalocean-access-token TOKEN kernelci
 ```
 
-> For DigitalOcean as for any cloud provider, some additional options such as authentication token must be provided when using Docker Machine.
+Liste des options disponibles pour ce driver: [https://docs.docker.com/machine/drivers/digital-ocean/#/options](https://docs.docker.com/machine/drivers/digital-ocean/#/options)
+
+* Exemple using Amazon EC2 driver
+
+```
+$ docker-machine create \
+  --driver amazonec2 \
+  --amazonec2-access-key=ACCESS_KEY_ID \
+  --amazonec2-secret-key=SECRET_ACCESS_KEY \
+  kernelci
+```
+
+Liste des options disponibles: [https://docs.docker.com/machine/drivers/aws/#/options](https://docs.docker.com/machine/drivers/aws/#/options)
+
+> For DigitalOcean, AWS as for any cloud provider, some additional options such as authentication token must be provided when using Docker Machine. 
 
 * Docker Machine also allows to manage an existing server with the [Generic driver](https://docs.docker.com/machine/drivers/generic/)
 
