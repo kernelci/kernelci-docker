@@ -1,21 +1,7 @@
 #!/bin/bash
 
-STACK_NAME="kernelci"
-
-## Prerequisites
-
-# Make sure Docker daemon is in swarm mode
-NODES=$(docker node ls 2>/dev/null)
-if [ $? = 1 ]; then
-    echo "Docker daemon must run in swarm mode"
-    echo "-> run the \"docker swarm init\" command to enable swarm mode"
-    exit 1
-fi
-
-# Get IP of Docker host from the DOCKER_HOST environment variable
+# Get host's IP (127.0.0.1 is assumed if $DOCKET_HOST is empty)
 IP=$(echo $DOCKER_HOST | cut -d'/' -f3 | cut -d':' -f1)
-
-# 127.0.0.1 is assumed if $DOCKET_HOST is empty
 if [ "$IP" = "" ]; then
   IP="127.0.0.1"
 fi
@@ -23,8 +9,7 @@ fi
 ## Deploy the application
 
 echo "-> deploying the application..."
-docker stack deploy -c docker-stack.yml $STACK_NAME
-echo "-> application deployed"
+docker-compose up -d
 
 ## Wait for the application to be available
 
@@ -51,16 +36,14 @@ while [ "$TOKEN" = "" ];do
 done
 echo "-> token returned: $TOKEN"
 
-### Create configuration with token created
+### Update frontend with token created
 
-CONFIG=frontend-$(date "+%Y%m%dT%H%M%S")
-sed "s/API_TOKEN/$TOKEN/" frontend/flask_settings-TPL > config/frontend.config
-docker config create $CONFIG config/frontend.config
+sed -e s/API_TOKEN/$TOKEN/ frontend/flask_settings-TPL > frontend/flask_settings
 
-### Update frontend with configuration
-
-docker service update --config-add src=$CONFIG,target=/etc/linaro/kernelci-frontend.cfg kernelci_frontend
+echo "-> wait will frontend is restarted"
+docker-compose stop frontend
+docker-compose start frontend
 
 echo "-> application configured"
-echo "--> backend available on http://${IP}:8081"
-echo "--> frontend available on http://${IP}:8080"
+echo "--> backend available on port 8081"
+echo "--> frontend available on port 8080"

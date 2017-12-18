@@ -14,7 +14,7 @@ It uses Docker Compose file to decribe the services of the whole application:
 * redis
 * mongo
 
-## Usage
+## Run the application
 
 ### Setup a Docker host
 
@@ -30,7 +30,7 @@ Debian 9 | 17.11 | o
 Debian 9 | 17.09 | o
 Debian 8 | 17.11 | x
 
-#### Manually
+#### Option 1: manually
 
 If you setup a Docker host manually, make sure it runs at least Docker 17.09 (last stable version to date).
 
@@ -51,7 +51,7 @@ $ sh get-docker.sh
 
 If you do not feel like running this script, you can download a Docker edition for your platform on the [Docker Store](https://store.docker.com/search?offering=community&type=edition)
 
-#### With Docker Machine
+#### Option 2: with Docker Machine
 
 Docker Machine is a great tool to spin up such hosts locally (on Virtualbox), on a cloud provider (AWS, GCE, Azure, DigitalOcean, ...). In one command line we can easily create a Docker host, the exemples bellow illustrate the usage of Docker Machine to create a Docker host named *kernelci* using different infrastructures. The installation instruction are available [here](https://docs.docker.com/machine/install-machine/)
 
@@ -107,6 +107,8 @@ $ docker swarm init --advertise-addr IP
 
 ### Clone the repository
 
+Once you have a Linux box up and running, get the repository
+
 ```
 $ git clone https://github.com/lucj/kernelci-docker
 $ cd kernelci-docker
@@ -114,7 +116,9 @@ $ cd kernelci-docker
 
 ### Run the application
 
+
 The startup of the application is done in several steps:
+
 * generation of a UUID
 * setup of this UUID in the database
 * creation of a config for the frontend using this UUID
@@ -148,19 +152,13 @@ In order to stop the application and remove all the components, run the followin
 
 In the current version, the database is persisted on a volume defined on the Docker host.
 
-### Upgrade
+## Modify the application
 
-In the current version, the frontend and backend are built by cloning the code from the following repository:
-* [https://github.com/kernelci/kernelci-frontend](https://github.com/kernelci/kernelci-frontend)
-* [https://github.com/kernelci/kernelci-backend](https://github.com/kernelci/kernelci-backend)
-
-In order to upgrade the application with the latest version (this only works on the local machine), you need to issue the following command:
+If you need to do some changes in kernelci *frontend* / *backend*, you can run the application with Docker Compose. Behind the hood, it will use the docker-compose.yml file which defines some additional options to mount the frontend's and backend's source code so changes done in your local IDE will be taken into account directly in the running application (through nodemon).
 
 ```
-$ docker-compose build
+$ docker-compose up
 ```
-
-This will create the last versions of the frontend and backend locally.
 
 > Those images would need to be pushed to a repository in order to be deployed on a remote machine
 

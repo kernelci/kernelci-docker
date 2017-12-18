@@ -1,65 +1,40 @@
-version: '3.3'
+version: '3.4'
 services:
   proxy:
-    build: ./proxy
     image: lucj/kernelci-proxy:${TAG:-latest}
-    depends_on:
-      - frontend
-      - backend
+    build: ./proxy
     ports:
       - 8080:8080
       - 8081:8081
-    deploy:
-      restart_policy:
-        condition: on-failure
+    restart: on-failure
   frontend:
-    build: ./frontend
     image: lucj/kernelci-frontend:${TAG:-latest}
-    depends_on:
-      - backend
-      - redis
-    deploy:
-      restart_policy:
-        condition: on-failure
+    build: ./frontend
+    restart: on-failure
+    volumes:
+      - $PWD/frontend/kernelci-frontend/app:/srv/kernelci-frontend/app
+      - $PWD/frontend/flask_settings:/etc/linaro/kernelci-frontend.cfg
+    command: nodemon -V --watch /srv/kernelci-frontend/app -e py,html --exec "/bin/bash -c" /srv/entrypoint.sh
   backend:
-    build: ./backend/app
     image: lucj/kernelci-backend:${TAG:-latest}
-    depends_on:
-      - mongo
-    deploy:
-      restart_policy:
-        condition: on-failure
+    build: ./backend/
+    restart: on-failure
+    volumes:
+      - $PWD/backend/kernelci-backend/app:/srv/kernelci-backend/app
+    command: nodemon -V --watch /srv/kernelci-backend/app -e py --exec "/bin/bash -c" /srv/entrypoint.sh
   celery:
-    build: ./backend/celery
-    # image: lucj/kernelci-celery:${TAG:-latest}
-    image: lucj/kernelci-celery:1.6
-    depends_on:
-      - redis
-    deploy:
-      restart_policy:
-        condition: on-failure
-  # celerybeat:
-  #   build:
-  #     context: ./backend/celery
-  #     dockerfile: Dockerfile-celerybeat
-  #   image: lucj/kernelci-celerybeat:${TAG:-latest}
-  #   depends_on:
-  #     - redis
-  #   deploy:
-  #     restart_policy:
-  #       condition: on-failure
-  #   command: sleep 100000
+    image: lucj/kernelci-celery:${TAG:-latest}
+    build:
+      context: ./backend/
+      dockerfile: Dockerfile-celery
+    restart: on-failure
   redis:
     image: redis:3.2
-    deploy:
-      restart_policy:
-        condition: on-failure
+    restart: on-failure
   mongo:
     image: mongo:3.4
+    restart: on-failure
     volumes:
       - data:/data/db
-    deploy:
-      restart_policy:
-        condition: on-failure
 volumes:
   data:

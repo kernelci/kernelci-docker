@@ -1,6 +1,0 @@
-FROM redis
-MAINTAINER "Milo Casagrande <milo.casagrande@linaro.org>"
-
-COPY redis.conf /usr/local/etc/redis/redis.conf
-
-CMD ["redis-server", "/usr/local/etc/redis/redis.conf"]

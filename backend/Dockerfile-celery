@@ -1,0 +1,25 @@
+FROM python:2.7.14
+
+# Configuration
+RUN mkdir -p /etc/linaro
+COPY celery/celery-config.cfg /etc/linaro/kernelci-celery.cfg
+
+# Use non root user
+RUN groupadd user && useradd --create-home --home-dir /home/user -g user user
+
+# Give additional rights on /var/www
+RUN mkdir -p /var/www/images/kernel-ci && chown -R user:user /var/www
+
+# Copy backend source code and give rigth to user
+COPY kernelci-backend /home/user/kernelci-backend
+RUN chown -R user:user /home/user/kernelci-backend
+
+# Install python dependencies
+RUN pip install -r /home/user/kernelci-backend/requirements.txt
+
+# Dedicated entrypoint
+COPY celery/entrypoint.sh /srv/entrypoint.sh
+
+# Run application using newly created user
+USER user
+CMD ["/srv/entrypoint.sh"]
