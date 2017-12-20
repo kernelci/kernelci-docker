@@ -21,6 +21,7 @@ services:
     restart: on-failure
     volumes:
       - $PWD/backend/kernelci-backend/app:/srv/kernelci-backend/app
+      - kci:/var/www/images/kernel-ci
     command: nodemon -V --watch /srv/kernelci-backend/app -e py --exec "/bin/bash -c" /srv/entrypoint.sh
   celery:
     image: lucj/kernelci-celery:${TAG:-latest}
@@ -28,6 +29,8 @@ services:
       context: ./backend/
       dockerfile: Dockerfile-celery
     restart: on-failure
+    volumes:
+      - kci:/var/www/images/kernel-ci
   redis:
     image: redis:3.2
     restart: on-failure
@@ -38,3 +41,4 @@ services:
       - data:/data/db
 volumes:
   data:
+  kci:
