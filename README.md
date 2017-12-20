@@ -8,7 +8,7 @@ This repository eases the installation process of KernelCI through the usage of 
 It uses Docker Compose file to decribe the services of the whole application:
 
 * reverse-proxy
-* frontend 
+* frontend
 * backend
 * celery task queue
 * redis
@@ -26,6 +26,7 @@ Linux | Docker | Status
 ----- | ------ | ------
 Ubuntu 16.04 | 17.11 | o
 Ubuntu 16.04 | 17.09 | o
+CentOS 7 | 17.09 | o
 Debian 9 | 17.11 | o
 Debian 9 | 17.09 | o
 Debian 8 | 17.11 | x
@@ -83,7 +84,7 @@ $ docker-machine create \
 
 Liste des options disponibles: [https://docs.docker.com/machine/drivers/aws/#/options](https://docs.docker.com/machine/drivers/aws/#/options)
 
-> For DigitalOcean, AWS as for any cloud provider, some additional options such as authentication token must be provided when using Docker Machine. 
+> For DigitalOcean, AWS as for any cloud provider, some additional options such as authentication token must be provided when using Docker Machine.
 
 * Docker Machine also allows to manage an existing server with the [Generic driver](https://docs.docker.com/machine/drivers/generic/)
 
@@ -182,4 +183,3 @@ Among the ongoing changes:
 - [x] Add stack file to deploy the application on a Swarm
 - [ ] Usage of env variable or Docker secret to provide the backend token
 - [ ] Handle tagging of the application and of its components
-
