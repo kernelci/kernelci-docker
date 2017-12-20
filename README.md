@@ -157,11 +157,29 @@ In the current version, the database is persisted on a volume defined on the Doc
 
 If you need to do some changes in kernelci *frontend* / *backend*, you can run the application with Docker Compose. Behind the hood, it will use the docker-compose.yml file which defines some additional options to mount the frontend's and backend's source code so changes done in your local IDE will be taken into account directly in the running application (through nodemon).
 
+Some wrapper scripts were developed to perform the actions needed:
+
+Start the application with the following command:
+
 ```
-$ docker-compose up
+$ ./dev-start.sh
+```
+
+Once the application is running, the frontend and backend source code can be modified directly from your favorite IDE. Each changes will be taken into account automatically within the running containers and the main process will be reloaded.
+
+You can build new images with the following command:
+
+```
+$ docker-compose build SERVICE_NAME
 ```
 
 > Those images would need to be pushed to a repository in order to be deployed on a remote machine
+
+The application can then be stopped
+
+```
+$ ./dev-stop.sh
+```
 
 ## Status
 
