@@ -135,13 +135,29 @@ The web ui is then available on port 8080 and the api on port 8081.
 
 ![Home](./images/kernelci-home.png)
 
-### Seed an existing dump
+### Backup / restore a mongo database
 
-If you need to restore an existing mongo dump file (in .tar.gz format), run the following command:
+You may have an already running version of kernelCI with data that you would like to keep.
+
+#### Backup a mongo database
+
+To do a backup of an existing mongo datase; run the following command on the mongo Host:
+
+```
+mongodump --quiet -d kernel-ci -o kernelci_db_dump
+tar czf kernelci_db_dump.tar.gz kernelci_db_dump
+```
+
+This will create a `.tar.gz` file available on the mongo Host. You can now copy/share it with the machine running kernelci-docker.
+
+#### Restore a mongo datase
+
+To restore an existing mongo database dump (in .tar.gz format), run the following command:
 
 ```
 ./seed.sh PATH_TO_DUMP_TAR_GZ
 ```
+/!\ This command needs to be run after `start.sh` once all the services are up and running.
 
 ### Stop the application
 
