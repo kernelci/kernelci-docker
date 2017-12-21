@@ -20,4 +20,4 @@ docker cp $DUMP_FOLDER $ID:/tmp
 rm -r ./$DUMP_FOLDER
 
 ## Restore dump
-docker exec $ID /bin/bash -c "mongorestore /tmp/$DUMP_FOLDER --gzip"
+docker exec $ID /bin/bash -c "mongorestore -d kernel-ci /tmp/$DUMP_FOLDER "
