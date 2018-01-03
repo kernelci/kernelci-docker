@@ -1,4 +1,5 @@
 config/*.config
+frontend/flask_settings
 search/test
 search/log/log-*.log
 vagrant/.vagrant
