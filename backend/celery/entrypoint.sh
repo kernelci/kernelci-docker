@@ -1,9 +1,10 @@
 #!/bin/bash
 
-# TOREMOVE
-# ugly fix to change "localhost" into "redis" for communication between service
-# will be done through env / secret later on
+#TEMPORARY: fix to change "localhost" into "redis" for communication between service
 sed -i '' -e s/localhost/redis/ /home/user/kernelci-backend/app/taskqueue/celeryconfig.py
+
+#TEMPORARY: fix to set the storage url
+sed -i '' -e "s@STORAGE_URL@$STORAGE_URL@" /etc/linaro/kernelci-celery.cfg
 
 # Run celery worker
 cd /home/user/kernelci-backend/app

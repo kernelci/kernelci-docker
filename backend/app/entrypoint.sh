@@ -4,7 +4,7 @@
 sed -i '' -e s/localhost/redis/ /srv/kernelci-backend/app/taskqueue/celeryconfig.py
 
 #TEMPORARY: fix to set the storage url
-sed -i '' -e s/STORAGE_URL/${STORAGE_URL}/ /etc/linaro/kernelci-backend.cfg
+sed -i '' -e "s@STORAGE_URL@$STORAGE_URL@" /etc/linaro/kernelci-backend.cfg
 
 # Wait until mongo is up and running
 echo "-> waiting for mongo to be available"

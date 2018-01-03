@@ -1,14 +1,23 @@
 FROM python:2.7.14
 
-# Configuration
-RUN mkdir -p /etc/linaro
-COPY celery/celery-config.cfg /etc/linaro/kernelci-celery.cfg
+# Install Node.js / nodemon
+RUN wget --no-check-certificate -nc -P /tmp/bitnami/pkg/cache/ https://downloads.bitnami.com/files/stacksmith/node-8.9.3-0-linux-x64-debian-8.tar.gz && \
+    tar -zxf /tmp/bitnami/pkg/cache/node-8.9.3-0-linux-x64-debian-8.tar.gz -P --transform 's|^.*/files|/opt/bitnami|' --wildcards '*/files' && \
+    rm -rf /tmp/bitnami/pkg/cache/node-8.9.3-0-linux-x64-debian-8.tar.gz
+ENV PATH="/opt/bitnami/node/bin:$PATH"
+RUN npm install -g nodemon
 
 # Use non root user
 RUN groupadd user && useradd --create-home --home-dir /home/user -g user user
 
+# Configuration
+COPY celery/celery-config.cfg /etc/linaro/kernelci-celery.cfg
+
+# Logs folder
+RUN mkdir -p /var/www/images/kernel-ci
+
 # Give additional rights on /var/www
-RUN mkdir -p /var/www/images/kernel-ci && chown -R user:user /var/www
+RUN chown -R user:user /etc/linaro /var/www
 
 # Copy backend source code and give rigth to user
 COPY kernelci-backend /home/user/kernelci-backend
