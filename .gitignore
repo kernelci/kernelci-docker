@@ -2,3 +2,4 @@ config/*.config
 search/test
 search/log/log-*.log
 vagrant/.vagrant
+.kernelci_token

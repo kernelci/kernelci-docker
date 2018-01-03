@@ -6,7 +6,10 @@ services:
     ports:
       - 8080:8080
       - 8081:8081
+      - 8082:8082
     restart: on-failure
+    volumes:
+      - kci:/usr/share/nginx/html/kernelci/logs
   frontend:
     image: lucj/kernelci-frontend:${TAG:-latest}
     build: ./frontend
@@ -18,19 +21,25 @@ services:
   backend:
     image: lucj/kernelci-backend:${TAG:-latest}
     build: ./backend/
+    environment:
+      STORAGE_URL: http://${IP:-127.0.0.1}:8082
     restart: on-failure
     volumes:
       - $PWD/backend/kernelci-backend/app:/srv/kernelci-backend/app
       - kci:/var/www/images/kernel-ci
-    command: nodemon -V --watch /srv/kernelci-backend/app -e py --exec "/bin/bash -c" /srv/entrypoint.sh
+    command: nodemon -V --watch /srv/kernelci-backend/app/server.py --exec "/bin/bash -c" /srv/entrypoint.sh
   celery:
     image: lucj/kernelci-celery:${TAG:-latest}
     build:
       context: ./backend/
       dockerfile: Dockerfile-celery
+    environment:
+      STORAGE_URL: http://${IP:-127.0.0.1}:8082
     restart: on-failure
     volumes:
+      - $PWD/backend/kernelci-backend/app:/srv/kernelci-backend/app
       - kci:/var/www/images/kernel-ci
+    command: nodemon -V --watch /srv/kernelci-backend/app -e py --ignore /srv/kernelci-backend/app/taskqueue/celeryconfig.py --exec "/bin/bash -c" /srv/entrypoint.sh
   redis:
     image: redis:3.2
     restart: on-failure
