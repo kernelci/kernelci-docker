@@ -1,6 +1,7 @@
 # Add the trailing slash for URLs !
 BACKEND_URL = "http://proxy:8081/"
-BACKEND_TOKEN = "4ad936ca-5f38-4aa7-8968-71fa591826c8"
+BACKEND_TOKEN = "TOKEN_TO_BE_REPLACED"
+FILE_SERVER_URL = "http://localhost:8082/"
 SECRET_KEY = "random_string"
 DATE_RANGE = 14
 CACHE_TYPE = 'redis'
