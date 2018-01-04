@@ -144,7 +144,7 @@ You may have an already running version of kernelCI with data that you would lik
 To do a backup of an existing mongo datase; run the following command on the mongo Host:
 
 ```
-mongodump --quiet -d kernel-ci -o kernelci_db_dump
+mongodump -d kernel-ci -o kernelci_db_dump
 tar czf kernelci_db_dump.tar.gz kernelci_db_dump
 ```
 
@@ -155,7 +155,7 @@ This will create a `.tar.gz` file available on the mongo Host. You can now copy/
 To restore an existing mongo database dump (in .tar.gz format), run the following command:
 
 ```
-./seed.sh PATH_TO_DUMP_TAR_GZ
+./seed.sh kernelci_db_dump.tar.gz
 ```
 /!\ This command needs to be run after `start.sh` once all the services are up and running.
 
