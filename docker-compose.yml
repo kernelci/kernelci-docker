@@ -21,8 +21,6 @@ services:
   backend:
     image: lucj/kernelci-backend:${TAG:-latest}
     build: ./backend/
-    environment:
-      STORAGE_URL: http://${IP:-127.0.0.1}:8082
     restart: on-failure
     volumes:
       - $PWD/backend/kernelci-backend/app:/srv/kernelci-backend/app
@@ -33,8 +31,6 @@ services:
     build:
       context: ./backend/
       dockerfile: Dockerfile-celery
-    environment:
-      STORAGE_URL: http://${IP:-127.0.0.1}:8082
     restart: on-failure
     volumes:
       - $PWD/backend/kernelci-backend/app:/srv/kernelci-backend/app
