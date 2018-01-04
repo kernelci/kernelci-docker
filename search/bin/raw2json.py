@@ -124,7 +124,10 @@ def parse_input_file(input_file, output):
             if log == '':
                 continue
             log.update(meta)
-            json.dump(log, fp)
+            try:
+                json.dump(log, fp)
+            except TypeError as err:
+                logging.info(err) 
             fp.write('\n')
 
     # Flag current file as done
