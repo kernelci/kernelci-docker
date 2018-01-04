@@ -5,6 +5,9 @@ services:
     ports:
       - 8080:8080
       - 8081:8081
+      - 8082:8082
+    volumes:
+      - kci:/usr/share/nginx/html/kernelci/logs
     deploy:
       restart_policy:
         condition: on-failure
@@ -15,11 +18,15 @@ services:
         condition: on-failure
   backend:
     image: lucj/kernelci-backend:${TAG:-latest}
+    volumes:
+      - kci:/var/www/images/kernel-ci
     deploy:
       restart_policy:
         condition: on-failure
   celery:
     image: lucj/kernelci-celery:${TAG:-latest}
+    volumes:
+      - kci:/var/www/images/kernel-ci
     deploy:
       restart_policy:
         condition: on-failure
@@ -37,3 +44,4 @@ services:
         condition: on-failure
 volumes:
   data:
+  kci:
