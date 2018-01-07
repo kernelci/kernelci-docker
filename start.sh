@@ -55,7 +55,6 @@ echo "-> token returned: $TOKEN"
 ### Create configuration with token created
 
 CONFIG=frontend-$(date "+%Y%m%dT%H%M%S")
-# sed "s/API_TOKEN/$TOKEN/" frontend/flask_settings-TPL > config/frontend.config
 sed -e "s/^BACKEND_TOKEN.*$/BACKEND_TOKEN = \"$TOKEN\"/" frontend/flask_settings > config/frontend.config
 docker config create $CONFIG config/frontend.config
 
