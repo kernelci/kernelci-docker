@@ -49,3 +49,4 @@ docker-compose start frontend
 echo "-> application configured"
 echo "--> frontend available on port 8080"
 echo "--> backend  available on port 8081"
+echo "--> storage  available on port 8082"

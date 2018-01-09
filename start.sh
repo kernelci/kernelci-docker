@@ -63,5 +63,6 @@ docker config create $CONFIG config/frontend.config
 docker service update --config-add src=$CONFIG,target=/etc/linaro/kernelci-frontend.cfg kernelci_frontend
 
 echo "-> application configured"
-echo "--> backend available on http://${IP}:8081"
-echo "--> frontend available on http://${IP}:8080"
+echo "--> frontend available on port 8080"
+echo "--> backend available on port 8081"
+echo "--> storage available on port 8082"

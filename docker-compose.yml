@@ -6,6 +6,7 @@ services:
     ports:
       - 8080:8080
       - 8081:8081
+      - 8082:8082
     restart: on-failure
     volumes:
       - kci:/usr/share/nginx/html/kernelci/logs
