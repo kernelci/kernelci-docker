@@ -135,7 +135,7 @@ The web ui is then available on port 8080 and the api on port 8081.
 
 ![Home](./images/kernelci-home.png)
 
-### Backup / restore a mongo database
+### Backup / restore KernelCI from Ansible
 
 You may have an already running version of kernelCI with data that you would like to keep.
 
@@ -155,7 +155,25 @@ This will create a `.tar.gz` file available on the mongo Host. You can now copy/
 To restore an existing mongo database dump (in .tar.gz format), run the following command:
 
 ```
-./seed.sh kernelci_db_dump.tar.gz
+./seed.sh -d kernelci_db_dump.tar.gz
+```
+/!\ This command needs to be run after `start.sh` once all the services are up and running.
+
+#### Backup the logs
+
+To do a backup of the boot/test logs on the previous KernelCI instance do:
+
+```
+tar czf kernelci_logs_dump.tar.gz -C /var/www/images/ kernel-ci
+```
+
+This will create a `.tar.gz` file available on the host. You can now copy/share it with the machine running kernelci-docker.
+
+#### Restore the logs
+
+To restore the logs from a backup (in .tar.gz format), run the following command:
+```
+./seed.sh -l kernelci_logs_dump.tar.gz
 ```
 /!\ This command needs to be run after `start.sh` once all the services are up and running.
 
