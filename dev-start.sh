@@ -7,10 +7,16 @@ if [ "$IP" = "" ]; then
 fi
 export IP
 
+curl --version > /dev/null
+if [ $? -ne 0 ];then
+	echo "Curl not found"
+	exit 1
+fi
+
 ## Deploy the application
 
 echo "-> deploying the application..."
-docker-compose up -d
+docker-compose up -d || exit $?
 
 ## Wait for the application to be available
 
@@ -43,8 +49,8 @@ echo "-> token returned: $TOKEN"
 sed -i "" -e "s/^BACKEND_TOKEN.*$/BACKEND_TOKEN = \"$TOKEN\"/" frontend/flask_settings
 
 echo "-> wait while frontend is restarted"
-docker-compose stop frontend
-docker-compose start frontend
+docker-compose stop frontend || exit $?
+docker-compose start frontend || exit $?
 
 echo "-> application configured"
 echo "--> frontend available on port 8080"
