@@ -15,6 +15,9 @@ if [ $? -ne 0 ];then
 	exit 1
 fi
 
+# disable cache
+sed -i "s,^CACHE_TYPE.*,CACHE_TYPE = 'null'," frontend/flask_settings
+
 ## Deploy the application
 
 echo "-> deploying the application..."
