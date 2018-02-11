@@ -9,4 +9,4 @@ done
 echo "-> redis is available, launching the frontend"
 
 # run uwsgi server
-uwsgi --ini /srv/uwsgi.ini
+uwsgi --ini /srv/uwsgi.ini </dev/null
