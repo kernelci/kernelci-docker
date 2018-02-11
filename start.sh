@@ -2,6 +2,17 @@
 
 STACK_NAME="kernelci"
 
+# Get tag parameter
+while getopts "t:" option
+do
+    case $option in
+        t) TAG=$OPTARG;;
+    esac
+done
+
+# Use "latest" if no tag is specified
+TAG=${TAG:-latest}
+
 ## Prerequisites
 
 # Make sure Docker daemon is in swarm mode
