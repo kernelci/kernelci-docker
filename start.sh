@@ -11,7 +11,7 @@ do
 done
 
 # Use "latest" if no tag is specified
-TAG=${TAG:-latest}
+export TAG=${TAG:-latest}
 
 ## Prerequisites
 
