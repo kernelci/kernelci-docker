@@ -22,6 +22,8 @@ services:
     image: lucj/kernelci-backend:${TAG:-latest}
     build: ./backend/
     restart: on-failure
+    environment:
+      - PYTHONUNBUFFERED=0 
     volumes:
       - $PWD/backend/kernelci-backend/app:/srv/kernelci-backend/app
       - kci:/var/www/images/kernel-ci
