@@ -309,8 +309,9 @@ Among the ongoing changes:
 - [ ] Check storage part
 - [x] Add api documentation
 - [x] Add elasticsearch and modify backend so log files are sent to ES
-- [ ] Configure reverse proxy (routing with subdomains, TLS termination, ...)
+- [x] Configure reverse proxy (routing with subdomains, TLS termination, ...)
 - [ ] Add front and back networks to isolate the services
 - [x] Add stack file to deploy the application on a Swarm
 - [ ] Usage of env variable or Docker secret to provide the backend token
 - [ ] Handle tagging of the application and of its components
+- [ ] Add memory constraints
