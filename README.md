@@ -62,7 +62,7 @@ Docker Machine is a great tool to spin up such hosts locally (on Virtualbox), on
 $ docker-machine create --driver virtualbox kernelci
 ```
 
-Liste  des options disponibles pour ce driver: [https://docs.docker.com/machine/drivers/virtualbox/#/options](https://docs.docker.com/machine/drivers/virtualbox/#/options)
+All available options for this driver: [https://docs.docker.com/machine/drivers/virtualbox/#/options](https://docs.docker.com/machine/drivers/virtualbox/#/options)
 
 * Exemple using DigitalOcean driver
 
@@ -70,7 +70,7 @@ Liste  des options disponibles pour ce driver: [https://docs.docker.com/machine/
 $ docker-machine create --driver digitalocean --digitalocean-access-token TOKEN kernelci
 ```
 
-Liste des options disponibles pour ce driver: [https://docs.docker.com/machine/drivers/digital-ocean/#/options](https://docs.docker.com/machine/drivers/digital-ocean/#/options)
+All available options for this driver: [https://docs.docker.com/machine/drivers/digital-ocean/#/options](https://docs.docker.com/machine/drivers/digital-ocean/#/options)
 
 * Exemple using Amazon EC2 driver
 
@@ -82,7 +82,7 @@ $ docker-machine create \
   kernelci
 ```
 
-Liste des options disponibles: [https://docs.docker.com/machine/drivers/aws/#/options](https://docs.docker.com/machine/drivers/aws/#/options)
+All available options for this driver: [https://docs.docker.com/machine/drivers/aws/#/options](https://docs.docker.com/machine/drivers/aws/#/options)
 
 > For DigitalOcean, AWS as for any cloud provider, some additional options such as authentication token must be provided when using Docker Machine.
 
