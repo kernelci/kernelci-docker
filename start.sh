@@ -65,6 +65,11 @@ echo "-> token returned: $TOKEN"
 
 ### Create configuration with token created
 
+# (optional) change default date range (14 days) to 6 months
+#TMP_FLASK=$(mktemp)
+#sed -e "s/^DATE_RANGE.*$/DATE_RANGE = 180/" frontend/flask_settings > $TMP_FLASK
+#mv $TMP_FLASK frontend/flask_settings
+
 CONFIG=frontend-$(date "+%Y%m%dT%H%M%S")
 sed -e "s/^BACKEND_TOKEN.*$/BACKEND_TOKEN = \"$TOKEN\"/" frontend/flask_settings > config/frontend.config
 docker config create $CONFIG config/frontend.config
