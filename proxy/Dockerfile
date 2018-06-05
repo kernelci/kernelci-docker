@@ -33,11 +33,6 @@ COPY backend/server.conf      /etc/nginx/conf.d/backend.conf
 COPY backend/proxy.conf       /etc/nginx/custom/backend-proxy.conf
 COPY backend/maintenance.conf /etc/nginx/custom/backend-maintenance.conf
 
-# Copy frontend's static assets
-RUN mkdir -p /usr/share/nginx/html/kernelci/frontend \
-    && chown nginx:nginx /usr/share/nginx/html/kernelci/frontend
-COPY --from=frontend /tmp/assets-build/ /usr/share/nginx/html/kernelci/frontend/static
-
 # Copy api's documentation
 RUN mkdir -p /usr/share/nginx/html/kernelci/backend/schema \
     && chown nginx:nginx /usr/share/nginx/html/kernelci/backend/
