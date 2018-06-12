@@ -10,6 +10,7 @@ services:
     restart: on-failure
     volumes:
       - kci:/usr/share/nginx/html/kernelci/logs
+      - $PWD/frontend/kernelci-frontend/app/dashboard/static:/usr/share/nginx/html/kernelci/frontend/static
   frontend:
     image: lucj/kernelci-frontend:${TAG:-latest}
     build: ./frontend
