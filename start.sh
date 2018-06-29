@@ -25,7 +25,7 @@ echo
 # Provide token to frontend
 echo "### Provide token to frontend"
 cp frontend/flask_settings.bak frontend/flask_settings 2>/dev/null
-sed -i .bak "s/TO_REPLACE_WITH_TOKEN_GENERATED_FROM_API/$token/" frontend/flask_settings
+sed -i "s/TO_REPLACE_WITH_TOKEN_GENERATED_FROM_API/$token/" frontend/flask_settings
 
 # Restart frontend so it take into account new token
 echo "### Restart frontend"
