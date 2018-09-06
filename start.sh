@@ -26,7 +26,7 @@ fi
 # Get IP of Docker host from the DOCKER_HOST environment variable
 IP=$(echo $DOCKER_HOST | cut -d'/' -f3 | cut -d':' -f1)
 
-# 127.0.0.1 is assumed if $DOCKET_HOST is empty
+# 127.0.0.1 is assumed if $DOCKER_HOST is empty
 if [ "$IP" = "" ]; then
   IP="127.0.0.1"
 fi
