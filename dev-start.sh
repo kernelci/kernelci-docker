@@ -69,7 +69,7 @@ echo "-> token returned: $TOKEN"
 
 ### Update frontend with token created
 
-sed -i "" -e "s/^BACKEND_TOKEN.*$/BACKEND_TOKEN = \"$TOKEN\"/" frontend/flask_settings
+sed -i "s/^BACKEND_TOKEN.*$/BACKEND_TOKEN = \"$TOKEN\"/" frontend/flask_settings
 
 echo "-> wait while frontend is restarted"
 docker-compose stop frontend || exit $?
