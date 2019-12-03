@@ -11,13 +11,13 @@ RUN npm install -g nodemon
 RUN groupadd user && useradd --create-home --home-dir /home/user -g user user
 
 # Configuration
-COPY celery/celery-config.cfg /etc/linaro/kernelci-celery.cfg
+COPY celery/celery-config.cfg /etc/kernelci/kernelci-celery.cfg
 
 # Logs folder
 RUN mkdir -p /var/www/images/kernel-ci
 
 # Give additional rights on /var/www
-RUN chown -R user:user /etc/linaro /var/www
+RUN chown -R user:user /etc/kernelci /var/www
 
 # Copy backend source code and give rigth to user
 COPY kernelci-backend /home/user/kernelci-backend

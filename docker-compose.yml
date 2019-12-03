@@ -17,7 +17,7 @@ services:
     restart: on-failure
     volumes:
       - $PWD/frontend/kernelci-frontend/app:/srv/kernelci-frontend/app
-      - $PWD/frontend/flask_settings:/etc/linaro/kernelci-frontend.cfg
+      - $PWD/frontend/flask_settings:/etc/kernelci/kernelci-frontend.cfg
     command: nodemon -V --watch /srv/kernelci-frontend/app -e py,html --exec "/bin/bash -c" /srv/entrypoint.sh
   backend:
     image: lucj/kernelci-backend:${TAG:-latest}
@@ -43,7 +43,7 @@ services:
     image: redis:3.2
     restart: on-failure
   mongo:
-    image: mongo:3.4
+    image: mongo:4.2
     restart: on-failure
     volumes:
       - data:/data/db

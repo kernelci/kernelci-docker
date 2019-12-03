@@ -76,7 +76,7 @@ docker config create $CONFIG config/frontend.config
 
 ### Update frontend with configuration
 
-docker service update --config-add src=$CONFIG,target=/etc/linaro/kernelci-frontend.cfg kernelci_frontend
+docker service update --config-add src=$CONFIG,target=/etc/kernelci/kernelci-frontend.cfg kernelci_frontend
 
 echo "-> application configured"
 echo "--> frontend available on port 8080"

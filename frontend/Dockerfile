@@ -1,8 +1,8 @@
-FROM bitnami/minideb:jessie
+FROM bitnami/minideb:buster
 
 # Install dependencies
 
-RUN install_packages build-essential git python python-pip python-dev uwsgi-plugin-python curl redis-tools wget
+RUN install_packages build-essential git python python-pip python-setuptools python-dev uwsgi-plugin-python curl redis-tools wget
 
 # Install Node.js / nodemon
 RUN wget --no-check-certificate -nc -P /tmp/bitnami/pkg/cache/ https://downloads.bitnami.com/files/stacksmith/node-8.9.3-0-linux-x64-debian-8.tar.gz && \
@@ -18,7 +18,7 @@ COPY kernelci-frontend /srv/kernelci-frontend
 RUN pip install -r kernelci-frontend/requirements.txt
 WORKDIR /srv/kernelci-frontend/app
 RUN touch /etc/flask_settings
-COPY flask_settings /etc/linaro/kernelci-frontend.cfg
+COPY flask_settings /etc/kernelci/kernelci-frontend.cfg
 
 # uWSGI configuration
 
