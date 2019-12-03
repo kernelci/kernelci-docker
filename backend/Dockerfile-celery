@@ -1,7 +1,10 @@
-FROM python:2.7.14
+FROM bitnami/minideb:buster
+
+# Install dependencies
+RUN install_packages git python python-pip python-setuptools python-dev build-essential wget gnupg2
 
 # Install Node.js / nodemon
-RUN wget --no-check-certificate -nc -P /tmp/bitnami/pkg/cache/ https://downloads.bitnami.com/files/stacksmith/node-8.9.3-0-linux-x64-debian-8.tar.gz && \
+RUN wget -q --no-check-certificate -nc -P /tmp/bitnami/pkg/cache/ https://downloads.bitnami.com/files/stacksmith/node-8.9.3-0-linux-x64-debian-8.tar.gz && \
     tar -zxf /tmp/bitnami/pkg/cache/node-8.9.3-0-linux-x64-debian-8.tar.gz -P --transform 's|^.*/files|/opt/bitnami|' --wildcards '*/files' && \
     rm -rf /tmp/bitnami/pkg/cache/node-8.9.3-0-linux-x64-debian-8.tar.gz
 ENV PATH="/opt/bitnami/node/bin:$PATH"
@@ -29,6 +32,12 @@ RUN pip install -r /home/user/kernelci-backend/requirements.txt
 
 # Dedicated entrypoint
 COPY celery/entrypoint.sh /srv/entrypoint.sh
+
+# kcidb (NOTE: requires python3)
+RUN install_packages python3 python3-pip python3-setuptools python3-dev
+#RUN pip install --upgrade pip; pip install --upgrade setuptools
+RUN git clone https://github.com/kernelci/kcidb.git /etc/kernelci/kcidb; \
+  cd /etc/kernelci/kcidb; python3 setup.py install
 
 # Run application using newly created user
 USER user
