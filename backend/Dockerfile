@@ -25,6 +25,7 @@ COPY app/kernelci-backend.cfg /etc/kernelci/kernelci-backend.cfg
 COPY kernelci-backend /srv/kernelci-backend
 
 # Install python dependencies
+RUN install_packages libyaml-dev  # needed for yaml.CLoader
 RUN pip install -r /srv/kernelci-backend/requirements.txt
 
 EXPOSE 8888

@@ -24,6 +24,7 @@ COPY kernelci-backend /home/user/kernelci-backend
 RUN chown -R user:user /home/user/kernelci-backend
 
 # Install python dependencies
+RUN install_packages libyaml-dev  # needed for yaml.CLoader
 RUN pip install -r /home/user/kernelci-backend/requirements.txt
 
 # Dedicated entrypoint
