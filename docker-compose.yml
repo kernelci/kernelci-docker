@@ -36,9 +36,7 @@ services:
       dockerfile: Dockerfile-celery
     restart: on-failure
     volumes:
-      - $PWD/backend/kernelci-backend/app:/srv/kernelci-backend/app
       - kci:/var/www/images/kernel-ci
-    command: nodemon -V --watch /srv/kernelci-backend/app -e py --ignore /srv/kernelci-backend/app/taskqueue/celeryconfig.py --exec "/bin/bash -c" /srv/entrypoint.sh
   redis:
     image: redis:3.2
     restart: on-failure
