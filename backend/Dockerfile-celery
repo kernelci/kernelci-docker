@@ -15,6 +15,7 @@ RUN groupadd user && useradd --create-home --home-dir /home/user -g user user
 
 # Configuration
 COPY celery/celery-config.cfg /etc/kernelci/kernelci-celery.cfg
+COPY app/kernelci-backend.cfg /etc/kernelci/kernelci-backend.cfg
 
 # Logs folder
 RUN mkdir -p /var/www/images/kernel-ci
