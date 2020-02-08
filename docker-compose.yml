@@ -1,7 +1,6 @@
 version: '2.2'
 services:
   proxy:
-    image: lucj/kernelci-proxy:${TAG:-latest}
     build: ./proxy
     ports:
       - 8080:8080
@@ -12,7 +11,6 @@ services:
       - kci:/usr/share/nginx/html/kernelci/logs
       - $PWD/frontend/kernelci-frontend/app/dashboard/static:/usr/share/nginx/html/kernelci/frontend/static
   frontend:
-    image: lucj/kernelci-frontend:${TAG:-latest}
     build: ./frontend
     restart: on-failure
     volumes:
@@ -20,7 +18,6 @@ services:
       - $PWD/frontend/flask_settings:/etc/kernelci/kernelci-frontend.cfg
     command: nodemon -V --watch /srv/kernelci-frontend/app -e py,html --exec "/bin/bash -c" /srv/entrypoint.sh
   backend:
-    image: lucj/kernelci-backend:${TAG:-latest}
     build: ./backend/
     restart: on-failure
     environment:
@@ -30,7 +27,6 @@ services:
       - kci:/var/www/images/kernel-ci
     command: nodemon -V --watch /srv/kernelci-backend/app/server.py --exec "/bin/bash -c" /srv/entrypoint.sh
   celery:
-    image: lucj/kernelci-celery:${TAG:-latest}
     build:
       context: ./backend/
       dockerfile: Dockerfile-celery
