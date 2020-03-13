@@ -1,0 +1,40 @@
+version: '3.4'
+services:
+  proxy:
+    image: nginx:1.12.2
+    configs:
+      - source: server_config
+        target: /etc/nginx/nginx.conf
+        mode: 0444
+        uid: '33'
+        gid: '33'
+      - source: server_cert
+        target: /etc/ssl/certs/server.crt
+        mode: 0444
+        uid: '33'
+        gid: '33'
+    secrets:
+      - source: server_key
+        target: /etc/ssl/certs/server.key
+        mode: 0400
+        uid: '33'
+        gid: '33'
+    networks:
+    - kernelci_default
+    ports:
+      - "80:80"
+      - "443:443"
+    deploy:
+      restart_policy:
+        condition: on-failure
+configs:
+  server_config:
+    file: ./nginx.conf
+  server_cert:
+    file: ./server-cert-bundle.pem
+secrets:
+  server_key:
+    file: ./server-key.pem
+networks:
+  kernelci_default:
+    external: true

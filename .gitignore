@@ -1,0 +1,9 @@
+config/*.config
+frontend/flask_settings
+search/test
+search/log/*.log
+search/log/*-done
+vagrant/.vagrant
+.kernelci_token
+tls/*.pem
+tls/*.srl

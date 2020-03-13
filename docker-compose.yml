@@ -1,38 +1,52 @@
-version: '3.3'
+version: '2.2'
 services:
   proxy:
-    build: ./webserver
-    image: kernelci/proxy
-    depends_on:
-      - frontend
-      - backend
+    image: lucj/kernelci-proxy:${TAG:-latest}
+    build: ./proxy
     ports:
       - 8080:8080
       - 8081:8081
-    restart: always
-  frontend:
-    build: ./frontend
-    image: kernelci/frontend
-    depends_on:
-      - redis
+      - 8082:8082
+    restart: on-failure
     volumes:
-      - ./frontend/flask_settings:/etc/linaro/kernelci-frontend.cfg
-    restart: always
+      - kci:/usr/share/nginx/html/kernelci/logs
+      - $PWD/frontend/kernelci-frontend/app/dashboard/static:/usr/share/nginx/html/kernelci/frontend/static
+  frontend:
+    image: lucj/kernelci-frontend:${TAG:-latest}
+    build: ./frontend
+    restart: on-failure
+    volumes:
+      - $PWD/frontend/kernelci-frontend/app:/srv/kernelci-frontend/app
+      - $PWD/frontend/flask_settings:/etc/linaro/kernelci-frontend.cfg
+    command: nodemon -V --watch /srv/kernelci-frontend/app -e py,html --exec "/bin/bash -c" /srv/entrypoint.sh
   backend:
-    build: ./backend/app
-    image: kernelci/backend
-    depends_on:
-      - mongo
-      - redis
-      - celery
-    restart: always
+    image: lucj/kernelci-backend:${TAG:-latest}
+    build: ./backend/
+    restart: on-failure
+    environment:
+      - PYTHONUNBUFFERED=0 
+    volumes:
+      - $PWD/backend/kernelci-backend/app:/srv/kernelci-backend/app
+      - kci:/var/www/images/kernel-ci
+    command: nodemon -V --watch /srv/kernelci-backend/app/server.py --exec "/bin/bash -c" /srv/entrypoint.sh
   celery:
-    build: ./backend/celery
-    image: kernelci/celery
-    restart: always
+    image: lucj/kernelci-celery:${TAG:-latest}
+    build:
+      context: ./backend/
+      dockerfile: Dockerfile-celery
+    restart: on-failure
+    volumes:
+      - $PWD/backend/kernelci-backend/app:/srv/kernelci-backend/app
+      - kci:/var/www/images/kernel-ci
+    command: nodemon -V --watch /srv/kernelci-backend/app -e py --ignore /srv/kernelci-backend/app/taskqueue/celeryconfig.py --exec "/bin/bash -c" /srv/entrypoint.sh
   redis:
     image: redis:3.2
-    restart: always
+    restart: on-failure
   mongo:
     image: mongo:3.4
-    restart: always
+    restart: on-failure
+    volumes:
+      - data:/data/db
+volumes:
+  data:
+  kci:

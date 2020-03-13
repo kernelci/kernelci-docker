@@ -1,4 +1,0 @@
-FROM kernelci-celery
-MAINTAINER "Milo Casagrande <milo.casagrande@linaro.org>"
-
-CMD ["celery", "beat", "--schedule=/var/run/celery/kernelci-beat.db", "--app=taskqueue", "--broker=redis://redis:6379/0", "--pid=/tmp/celery-beat.pid"]

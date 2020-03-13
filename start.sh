@@ -1,37 +1,84 @@
 #!/bin/bash
 
-# Note: temporary script to ease the start process by providing backend token to frontend
+STACK_NAME="kernelci"
 
-# Build all the images (if not present locally)
-echo "### Building the images"
-echo
-docker-compose build
+# Get tag parameter
+while getopts "t:" option
+do
+    case $option in
+        t) TAG=$OPTARG;;
+    esac
+done
 
-# Start the whole application
-echo "### Start the application"
-echo
-docker-compose up -d
+# Use "latest" if no tag is specified
+export TAG=${TAG:-latest}
 
-# Wait for the app to be ready
-# TODO: check on /version endpoint until it's available
-sleep 15 
+## Prerequisites
 
-# Get token from API
-echo "### Generate API token"
-token=$(curl -s -X POST -H "Content-Type: application/json" -H "Authorization: MASTER_KEY" -d '{"email": "me@gmail.com", "admin": 1}' localhost:8081/token | jq -r ".result[0].token")
-echo "token is $token"
-echo
+# Make sure Docker daemon is in swarm mode
+NODES=$(docker node ls 2>/dev/null)
+if [ $? = 1 ]; then
+    echo "Docker daemon must run in swarm mode"
+    echo "-> run the \"docker swarm init\" command to enable swarm mode"
+    exit 1
+fi
 
-# Provide token to frontend
-echo "### Provide token to frontend"
-cp frontend/flask_settings.bak frontend/flask_settings 2>/dev/null
-sed -i "s/TO_REPLACE_WITH_TOKEN_GENERATED_FROM_API/$token/" frontend/flask_settings
+# Get IP of Docker host from the DOCKER_HOST environment variable
+IP=$(echo $DOCKER_HOST | cut -d'/' -f3 | cut -d':' -f1)
 
-# Restart frontend so it take into account new token
-echo "### Restart frontend"
-echo
-docker-compose stop frontend
-docker-compose start frontend
+# 127.0.0.1 is assumed if $DOCKER_HOST is empty
+if [ "$IP" = "" ]; then
+  IP="127.0.0.1"
+fi
 
-echo "### You'r good to go, frontend is available on http://localhost:8080"
-echo
+## Deploy the application
+
+echo "-> deploying the application..."
+docker stack deploy -c docker-stack.yml $STACK_NAME
+echo "-> application deployed"
+
+## Wait for the application to be available
+
+echo "-> waiting for backend..."
+while [ $(curl -s -m 3 -o /dev/null -w "%{http_code}" $IP:8081) -ne 200 ]; do
+   sleep 1
+done
+echo "-> waiting for frontend..."
+while [ $(curl -s -m 3 -o /dev/null -w "%{http_code}" $IP:8080) -ne 200 ]; do
+  sleep 1
+done
+
+## Configure the application
+
+echo "-> configuring the application..."
+
+### Get token from backend
+
+echo "-> requesting token from backend..."
+TOKEN=""
+while [ "$TOKEN" = "" ];do
+  TOKEN=$(curl -m 3 -s -X POST -H "Content-Type: application/json" -H "Authorization: MASTER_KEY" -d '{"email": "adm@kernelci.org", "admin": 1}' $IP:8081/token | docker container run --rm -i lucj/jq -r .result[0].token 2>/dev/null)
+  sleep 1
+done
+echo $TOKEN > .kernelci_token
+echo "-> token returned: $TOKEN"
+
+### Create configuration with token created
+
+# (optional) change default date range (14 days) to 6 months
+#TMP_FLASK=$(mktemp)
+#sed -e "s/^DATE_RANGE.*$/DATE_RANGE = 180/" frontend/flask_settings > $TMP_FLASK
+#mv $TMP_FLASK frontend/flask_settings
+
+CONFIG=frontend-$(date "+%Y%m%dT%H%M%S")
+sed -e "s/^BACKEND_TOKEN.*$/BACKEND_TOKEN = \"$TOKEN\"/" frontend/flask_settings > config/frontend.config
+docker config create $CONFIG config/frontend.config
+
+### Update frontend with configuration
+
+docker service update --config-add src=$CONFIG,target=/etc/linaro/kernelci-frontend.cfg kernelci_frontend
+
+echo "-> application configured"
+echo "--> frontend available on port 8080"
+echo "--> backend available on port 8081"
+echo "--> storage available on port 8082"
