@@ -1,7 +1,7 @@
-FROM bitnami/minideb:jessie
+FROM bitnami/minideb:buster
 
 # Install dependencies
-RUN install_packages git python python-pip python-dev build-essential wget
+RUN install_packages git python python-pip python-setuptools python-dev build-essential wget gnupg2
 RUN pip install python-dateutil
 
 # Install Node.js / nodemon
@@ -12,19 +12,20 @@ ENV PATH="/opt/bitnami/node/bin:$PATH"
 RUN npm install -g nodemon
 
 # Install mongo shell
-RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0C49F3730359A14518585931BC711F9BA15703C6 \
-    && echo "deb http://repo.mongodb.org/apt/debian jessie/mongodb-org/3.4 main" | tee /etc/apt/sources.list.d/mongodb-org-3.4.list \
+RUN wget -qO - https://www.mongodb.org/static/pgp/server-4.2.asc | apt-key add - \
+    && echo "deb http://repo.mongodb.org/apt/debian buster/mongodb-org/4.2 main" | tee /etc/apt/sources.list.d/mongodb-org-4.2.list \
     && apt-get update -y \
     && apt-get install -y mongodb-org-shell
 
 # Configuration
-RUN mkdir -p /etc/linaro
-COPY app/kernelci-backend.cfg /etc/linaro/kernelci-backend.cfg
+RUN mkdir -p /etc/kernelci
+COPY app/kernelci-backend.cfg /etc/kernelci/kernelci-backend.cfg
 
 # Get source code
 COPY kernelci-backend /srv/kernelci-backend
 
 # Install python dependencies
+RUN install_packages libyaml-dev  # needed for yaml.CLoader
 RUN pip install -r /srv/kernelci-backend/requirements.txt
 
 EXPOSE 8888
