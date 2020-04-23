@@ -22,9 +22,10 @@ COPY celery/entrypoint.sh /srv/entrypoint.sh
 
 # kcidb (NOTE: requires python3)
 RUN install_packages python3 python3-pip python3-setuptools python3-dev
-#RUN pip install --upgrade pip; pip install --upgrade setuptools
-RUN git clone https://github.com/kernelci/kcidb.git /etc/kernelci/kcidb; \
-  cd /etc/kernelci/kcidb; python3 setup.py install
+RUN git clone -b v5 https://github.com/kernelci/kcidb.git /etc/kernelci/kcidb; \
+  cd /etc/kernelci/kcidb; python3 -m pip install -r requirements.txt; \
+    python3 -m pip install --upgrade google-cloud-pubsub; \
+    python3 setup.py install
 
 # Run application
 CMD ["/srv/entrypoint.sh"]
