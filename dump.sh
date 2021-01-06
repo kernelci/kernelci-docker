@@ -6,7 +6,12 @@ do
         d)
 	# remove trailing slash
 	DUMP_FOLDER=$(echo $OPTARG | sed 's,/*$,,')
-	echo "INFO: dump in $DUMP_FOLTER"
+	echo "INFO: dump in $DUMP_FOLDER"
+	echo "$DUMP_FOLDER" | grep -q '^/'
+	if [ $? -ne 0 ];then
+		echo "ERROR: dump folder should be given full path"
+		exit 1
+	fi
 	;;
     esac
 done
