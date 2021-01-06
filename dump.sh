@@ -3,7 +3,11 @@
 while getopts "d:" option
 do
     case $option in
-        d) DUMP_FOLDER=$OPTARG;;
+        d)
+	# remove trailing slash
+	DUMP_FOLDER=$(echo $OPTARG | sed 's,/*$,,')
+	echo "INFO: dump in $DUMP_FOLTER"
+	;;
     esac
 done
 
