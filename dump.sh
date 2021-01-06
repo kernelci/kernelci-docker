@@ -40,10 +40,22 @@ docker cp $db:/tmp/kernelci-$ts.gz ${DUMP_FOLDER:-/tmp}
 
 ## Backup logs
 
+# sanity check if volume exists
+if [ $(docker volume ls | awk '{print $2}' |grep _kci$ | wc -l) -ge 2 ];then
+	echo "ERROR: too many kci dava volumes"
+	exit 1
+fi
+VOLUMENAME=$(docker volume ls | awk '{print $2}' |grep _kci$)
+
+echo "Dump $VOLUMENAME"
+if [ -z "$VOLUMENAME" ];then
+	echo "ERROR: no volume name found"
+	exit 1
+fi
 # Run alpine container using logs volume
 docker run \
   --rm \
-  -v kernelci_kci:/tmp/logs \
+  -v $VOLUMENAME:/tmp/logs \
   -v ${DUMP_FOLDER:-/tmp}:/tmp/dump \
   alpine tar -zcvf /tmp/dump/kernelci-logs-$ts.tar.gz /tmp/logs
 
