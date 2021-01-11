@@ -4,7 +4,14 @@ while getopts "d:l:" option
 do
     case $option in
         d) DB_DUMP_FILE=$OPTARG;;
-        l) LOG_DUMP_FILE=$OPTARG;;
+        l)
+		LOG_DUMP_FILE=$OPTARG
+		echo "$LOG_DUMP_FILE" | grep -q '^/'
+		if [ $? -ne 0 ];then
+			echo "ERROR: log dump should be given full path"
+			exit 1
+		fi
+	;;
     esac
 done
 
