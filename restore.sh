@@ -30,7 +30,7 @@ if [ ! -z "$DB_DUMP_FILE" ];then
 
     echo $DB_DUMP_FILE |grep -q 'gz$'
     if [ $? -eq 0 ];then
-	    gunzip $DB_DUMP_FILE || exit 1
+	    gunzip --keep $DB_DUMP_FILE|| exit 1
 	    DB_DUMP_FILE=$(echo $DB_DUMP_FILE | sed 's,.gz$,,')
     fi
     ## Copy dump to container
