@@ -36,6 +36,9 @@ if [ ! -z "$DB_DUMP_FILE" ];then
     ## Copy dump to container
     docker cp $DB_DUMP_FILE $ID:/tmp || exit 1
 
+    # handle if DB_DUMP_FILE was in another folder
+    DB_DUMP_FILE=$(basename $DB_DUMP_FILE)
+
     ## Restore dump
     echo "Restore $DB_DUMP_FILE"
     docker exec $ID /bin/bash -c "mongorestore --archive=/tmp/$DB_DUMP_FILE"
