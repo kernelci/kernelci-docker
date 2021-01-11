@@ -48,6 +48,18 @@ if [ ! -z "$DB_DUMP_FILE" ];then
 fi
 
 if [ ! -z "$LOG_DUMP_FILE" ];then
+	# sanity check if volume exists
+	if [ $(docker volume ls | awk '{print $2}' |grep _kci$ | wc -l) -ge 2 ];then
+		echo "ERROR: too many kci dava volumes"
+		exit 1
+	fi
+	VOLUMENAME=$(docker volume ls | awk '{print $2}' |grep _kci$)
+
+	echo "Restore on $VOLUMENAME"
+	if [ -z "$VOLUMENAME" ];then
+		echo "ERROR: no volume name found"
+		exit 1
+	fi
     echo "-->Restoring logs database from $LOG_DUMP_FILE"
     ## Restore logs
     tar xvf $LOG_DUMP_FILE || exit 1
