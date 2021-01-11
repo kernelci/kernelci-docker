@@ -61,9 +61,14 @@ if [ ! -z "$LOG_DUMP_FILE" ];then
 		exit 1
 	fi
     echo "-->Restoring logs database from $LOG_DUMP_FILE"
+    mkdir kernelci-logs
+    cd kernelci-logs
     ## Restore logs
     tar xvf $LOG_DUMP_FILE || exit 1
-    docker run --rm -v `pwd`/kernel-ci/:/tmp/kernelci_logs/ -v kernelci_kci:/var/lib/docker/volumes/kernelci_kci/_data busybox cp -r /tmp/kernelci_logs/. /var/lib/docker/volumes/kernelci_kci/_data
+    docker run --rm \
+	-v $(pwd):/tmp/kernelci_logs/ \
+	-v $VOLUMENAME:/var/lib/docker/volumes/kernelci_kci/_data \
+	busybox cp -r /tmp/kernelci_logs/tmp/logs/. /var/lib/docker/volumes/kernelci_kci/_data
     rm -r kernel-ci/
 fi
 
