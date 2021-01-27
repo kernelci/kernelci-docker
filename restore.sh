@@ -41,7 +41,7 @@ if [ ! -z "$DB_DUMP_FILE" ];then
 
     ## Restore dump
     echo "Restore $DB_DUMP_FILE"
-    docker exec $ID /bin/bash -c "mongorestore --archive=/tmp/$DB_DUMP_FILE"
+    docker exec $ID /bin/bash -c "mongorestore --archive=/tmp/$DB_DUMP_FILE --drop"
     if [ $? -ne 0 ];then
 	    exit 1
     fi
@@ -69,7 +69,6 @@ if [ ! -z "$LOG_DUMP_FILE" ];then
 	-v $(pwd):/tmp/kernelci_logs/ \
 	-v $VOLUMENAME:/var/lib/docker/volumes/kernelci_kci/_data \
 	busybox cp -r /tmp/kernelci_logs/tmp/logs/. /var/lib/docker/volumes/kernelci_kci/_data
-    rm -r kernel-ci/
 fi
 
 exit 0
