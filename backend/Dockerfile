@@ -1,7 +1,7 @@
 FROM bitnami/minideb:buster
 
 # Install dependencies
-RUN install_packages git python python-pip python-setuptools python-dev build-essential wget gnupg2
+RUN install_packages git python python-pip python-setuptools python-dev build-essential wget gnupg2 python-wheel
 RUN pip install python-dateutil
 
 # Install Node.js / nodemon

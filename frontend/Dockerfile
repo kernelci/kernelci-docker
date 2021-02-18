@@ -2,7 +2,7 @@ FROM bitnami/minideb:buster
 
 # Install dependencies
 
-RUN install_packages build-essential git python python-pip python-setuptools python-dev uwsgi-plugin-python curl redis-tools wget
+RUN install_packages build-essential git python python-pip python-setuptools python-dev uwsgi-plugin-python curl redis-tools wget python-wheel
 
 # Install Node.js / nodemon
 RUN wget --no-check-certificate -nc -P /tmp/bitnami/pkg/cache/ https://downloads.bitnami.com/files/stacksmith/node-8.9.3-0-linux-x64-debian-8.tar.gz && \
