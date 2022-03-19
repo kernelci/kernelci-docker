@@ -10,7 +10,7 @@ RUN node /front/app/dashboard/static/js/lib/r.js -o /front/app/dashboard/static/
 
 FROM bitnami/minideb:buster as backend
 
-RUN install_packages git python python-pip python-setuptools python-dev build-essential
+RUN install_packages git python python-pip python-setuptools python-dev build-essential python-wheel
 RUN git clone https://github.com/kernelci/kernelci-backend.git /tmp/kernelci-backend
 RUN pip install -r /tmp/kernelci-backend/requirements.txt
 RUN cd /tmp/kernelci-backend/doc && make html
